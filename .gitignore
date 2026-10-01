@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# Cloned repositories
+repos/
+
+# SBOM output
+sboms/
+sbom-output/
+
+# CodeQL databases
+databases/
+codeql-repo/
+
+# Temporary files
+tmp/
+*.tmp
+*.sarif
+
+# Generated scan output
+results.json
+nodegoat.json
+*.log
+*.rar
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

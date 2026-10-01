@@ -1,0 +1,1 @@
+"""Analisis de seguridad: CodeQL y parseo de SARIF."""
