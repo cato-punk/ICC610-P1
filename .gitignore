@@ -21,6 +21,9 @@ repos/
 sboms/
 sbom-output/
 
+# Grype output
+grype-output/
+
 # CodeQL databases
 databases/
 codeql-repo/

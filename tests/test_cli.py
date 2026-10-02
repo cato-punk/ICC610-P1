@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 import pytest
 
 from miner.cli import _apply_sort_limit
@@ -214,3 +216,200 @@ class TestAnalyzeRepoResilience:
         # GitHub's "C++" must be mapped to CodeQL's "cpp" and tried
         assert "cpp" in tried
         assert "python" in tried
+
+
+class TestBuildGrypeResult:
+    def _sbom(self, tmp_path):
+        sbom = tmp_path / "repo.cdx.json"
+        sbom.write_text("{}", encoding="utf-8")
+        return sbom
+
+    def test_missing_sbom_is_skipped_not_failed(self, tmp_path):
+        from miner.cli import _build_grype_result
+        from reporter.models import GrypeStatus
+
+        result = _build_grype_result(
+            "mozilla", "send", tmp_path / "absent.cdx.json", tmp_path / "send.json", "0.120.0",
+        )
+
+        assert result.status is GrypeStatus.SKIPPED
+        assert "not found" in (result.error_message or "")
+        assert result.vulnerabilities == 0
+
+    def test_vulnerabilities_found_is_success(self, tmp_path, monkeypatch):
+        from miner.cli import _build_grype_result
+        from reporter.models import GrypeStatus
+
+        monkeypatch.setattr("miner.cli.scan_sbom", lambda s, o: o)
+        monkeypatch.setattr("miner.cli.count_vulnerabilities", lambda p: 3)
+        monkeypatch.setattr(
+            "miner.cli.severity_counts",
+            lambda p: {"Critical": 1, "High": 2, "Medium": 0, "Low": 0, "Negligible": 0},
+        )
+
+        result = _build_grype_result(
+            "mozilla", "send", self._sbom(tmp_path), tmp_path / "send.json", "0.120.0",
+        )
+
+        assert result.status is GrypeStatus.SUCCESS
+        assert result.vulnerabilities == 3
+        assert result.severity_counts["Critical"] == 1
+
+    def test_clean_scan_is_no_vulnerabilities(self, tmp_path, monkeypatch):
+        from miner.cli import _build_grype_result
+        from reporter.models import GrypeStatus
+
+        monkeypatch.setattr("miner.cli.scan_sbom", lambda s, o: o)
+        monkeypatch.setattr("miner.cli.count_vulnerabilities", lambda p: 0)
+        monkeypatch.setattr(
+            "miner.cli.severity_counts",
+            lambda p: {"Critical": 0, "High": 0, "Medium": 0, "Low": 0, "Negligible": 0},
+        )
+
+        result = _build_grype_result(
+            "mozilla", "send", self._sbom(tmp_path), tmp_path / "send.json", "0.120.0",
+        )
+
+        assert result.status is GrypeStatus.NO_VULNERABILITIES
+
+    def test_scan_exception_is_recorded_not_raised(self, tmp_path, monkeypatch):
+        from miner.cli import _build_grype_result
+        from reporter.models import GrypeStatus
+
+        def boom(sbom, out):
+            raise RuntimeError("grype crashed")
+
+        monkeypatch.setattr("miner.cli.scan_sbom", boom)
+
+        result = _build_grype_result(
+            "mozilla", "send", self._sbom(tmp_path), tmp_path / "send.json", "0.120.0",
+        )
+
+        assert result.status is GrypeStatus.FAILED
+        assert "grype crashed" in (result.error_message or "")
+
+
+class TestGrypeCommand:
+    """End-to-end checks on `miner grype`.
+
+    The console output is asserted implicitly: Rich raises MarkupError on an
+    unbalanced closing tag such as 'reports written to x[/]', which would
+    surface here as a non-zero exit code and a captured exception.
+    """
+
+    def _run(self, args, monkeypatch, repos=None, severity=None, count=2):
+        from typer.testing import CliRunner
+        from miner.cli import app
+
+        monkeypatch.setattr("miner.cli._grype_available", lambda: "0.120.0")
+        monkeypatch.setattr("miner.cli.fetch_repos", lambda org: repos or [make_repo("send", stars=10)])
+
+        def fake_scan(sbom, out):
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text('{"matches": []}', encoding="utf-8")
+            return out
+
+        monkeypatch.setattr("miner.cli.scan_sbom", fake_scan)
+        monkeypatch.setattr("miner.cli.count_vulnerabilities", lambda p: count)
+        monkeypatch.setattr("miner.cli.severity_counts", lambda p: severity or {
+            "Critical": 1, "High": 1, "Medium": 0, "Low": 0, "Negligible": 0,
+        })
+        return CliRunner().invoke(app, ["grype", *args])
+
+    def test_happy_path_writes_report(self, tmp_path, monkeypatch):
+        sboms = tmp_path / "sboms"
+        sboms.mkdir()
+        (sboms / "send.cdx.json").write_text("{}", encoding="utf-8")
+        out = tmp_path / "grype-out"
+
+        result = self._run(
+            ["--organization", "mozilla", "--sbom-dir", str(sboms), "--output-dir", str(out)],
+            monkeypatch,
+        )
+
+        assert result.exit_code == 0, result.exception
+        assert result.exception is None
+        report = out / "grype-report.json"
+        assert report.exists()
+        data = json.loads(report.read_text(encoding="utf-8"))
+        assert data["organization"] == "mozilla"
+        assert data["grype_version"] == "0.120.0"
+        assert data["summary"]["vulnerabilities"] == 2
+        assert data["summary"]["severity_counts"]["Critical"] == 1
+        assert data["repositories"][0]["full_name"] == "mozilla/send"
+
+    def test_missing_sbom_is_skipped_and_not_fatal(self, tmp_path, monkeypatch):
+        sboms = tmp_path / "sboms"
+        sboms.mkdir()
+        out = tmp_path / "grype-out"
+
+        result = self._run(
+            ["--organization", "mozilla", "--sbom-dir", str(sboms), "--output-dir", str(out)],
+            monkeypatch,
+        )
+
+        assert result.exit_code == 0, result.exception
+        data = json.loads((out / "grype-report.json").read_text(encoding="utf-8"))
+        assert data["summary"]["skipped"] == 1
+        assert data["summary"]["failed"] == 0
+
+    def test_all_failed_exits_nonzero(self, tmp_path, monkeypatch):
+        from typer.testing import CliRunner
+        from miner.cli import app
+
+        def boom(sbom, out):
+            raise RuntimeError("grype crashed")
+
+        monkeypatch.setattr("miner.cli._grype_available", lambda: "0.120.0")
+        monkeypatch.setattr("miner.cli.fetch_repos", lambda org: [make_repo("send")])
+        monkeypatch.setattr("miner.cli.scan_sbom", boom)
+        sboms = tmp_path / "sboms"
+        sboms.mkdir()
+        (sboms / "send.cdx.json").write_text("{}", encoding="utf-8")
+
+        result = CliRunner().invoke(app, [
+            "grype", "--organization", "mozilla",
+            "--sbom-dir", str(sboms), "--output-dir", str(tmp_path / "out"),
+        ])
+
+        assert result.exit_code == 1
+
+    def test_respects_limit_and_sort_by(self, tmp_path, monkeypatch):
+        sboms = tmp_path / "sboms"
+        sboms.mkdir()
+        for name in ("a", "b", "c"):
+            (sboms / f"{name}.cdx.json").write_text("{}", encoding="utf-8")
+        out = tmp_path / "grype-out"
+        repos = [make_repo("a", stars=1), make_repo("b", stars=99), make_repo("c", stars=50)]
+
+        result = self._run(
+            ["--organization", "mozilla", "--limit", "2", "--sort-by", "stars",
+             "--sbom-dir", str(sboms), "--output-dir", str(out)],
+            monkeypatch,
+            repos=repos,
+        )
+
+        assert result.exit_code == 0, result.exception
+        data = json.loads((out / "grype-report.json").read_text(encoding="utf-8"))
+        assert data["summary"]["repositories"] == 2
+        assert [r["full_name"] for r in data["repositories"]] == ["mozilla/b", "mozilla/c"]
+
+    def test_missing_sbom_dir_exits_one(self, tmp_path, monkeypatch):
+        result = self._run(
+            ["--organization", "mozilla", "--sbom-dir", str(tmp_path / "absent")],
+            monkeypatch,
+        )
+        assert result.exit_code == 1
+
+    def test_no_target_exits_one(self, monkeypatch):
+        result = self._run([], monkeypatch)
+        assert result.exit_code == 1
+
+    def test_unknown_sort_by_exits_one(self, tmp_path, monkeypatch):
+        sboms = tmp_path / "sboms"
+        sboms.mkdir()
+        result = self._run(
+            ["--organization", "mozilla", "--sort-by", "bogus", "--sbom-dir", str(sboms)],
+            monkeypatch,
+        )
+        assert result.exit_code == 1

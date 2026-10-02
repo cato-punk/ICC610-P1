@@ -111,3 +111,54 @@ class SbomReport(BaseModel):
             "summary": self.summary.model_dump(mode="json"),
             "repositories": [r.model_dump(mode="json") for r in repos],
         }
+
+
+class GrypeStatus(str, Enum):
+    """Execution state of the Grype scan for a single repository."""
+
+    SUCCESS = "success"
+    NO_VULNERABILITIES = "no_vulnerabilities"
+    FAILED = "failed"
+    SKIPPED = "skipped"
+
+
+class GrypeResult(BaseModel):
+    """Grype scan result for a single repository."""
+
+    full_name: str
+    scanned_at: datetime
+    grype_version: str
+    status: GrypeStatus
+    vulnerabilities: int = 0
+    severity_counts: dict[str, int] = Field(default_factory=dict)
+    sbom_path: Optional[str] = None
+    report_path: Optional[str] = None
+    error_message: Optional[str] = None
+
+
+class GrypeSummary(BaseModel):
+    repositories: int
+    success: int
+    no_vulnerabilities: int
+    failed: int
+    skipped: int
+    vulnerabilities: int
+    severity_counts: dict[str, int] = Field(default_factory=dict)
+
+
+class GrypeReport(BaseModel):
+    organization: str
+    generated_at: datetime
+    grype_version: str
+    summary: GrypeSummary
+    repositories: list[GrypeResult] = Field(default_factory=list)
+
+    def to_ordered_json(self) -> dict:
+        repos = sorted(self.repositories, key=lambda r: r.full_name)
+        return {
+            "organization": self.organization,
+            "generated_at": self.generated_at.isoformat(),
+            "grype_version": self.grype_version,
+            "summary": self.summary.model_dump(mode="json"),
+            "repositories": [r.model_dump(mode="json") for r in repos],
+        }

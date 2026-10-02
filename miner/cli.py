@@ -13,9 +13,20 @@ from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from analyzer.codeql import create_database, detect_packs_root, fetch_packs_root, run_analysis
+from analyzer.grype import (
+    SEVERITIES,
+    count_vulnerabilities,
+    get_grype_version,
+    scan_sbom,
+    severity_counts,
+)
 from analyzer.sarif import parse_sarif
 from reporter.models import (
     AnalysisSummary,
+    GrypeReport,
+    GrypeResult,
+    GrypeStatus,
+    GrypeSummary,
     OrganizationReport,
     RepoStatus,
     RepositoryResult,
@@ -332,6 +343,148 @@ def sbom(
     console.print(f"\n[bold green]SBOM report written to {report_path}[/]")
 
 
+@app.command()
+def grype(
+    organization: str = typer.Option(None, "--organization", "-o", help="GitHub organization name"),
+    repo: str = typer.Option(None, "--repo", "-r", help="Single repository (e.g. OWASP/NodeGoat or just NodeGoat with -o)"),
+    sbom_dir: str = typer.Option(
+        "sbom-output/sboms",
+        "--sbom-dir",
+        help="Directory containing CycloneDX SBOM files. Defaults to the output of 'miner sbom'; use 'sboms' to read the output of 'miner scan'.",
+    ),
+    output_dir: str = typer.Option("grype-output", "--output-dir", "-O", help="Output directory for Grype reports"),
+    limit: int = typer.Option(None, "--limit", "-n", min=1, help="Process at most this many repositories (e.g. --limit 30 for the top 30)"),
+    sort_by: str = typer.Option(None, "--sort-by", help="Criterion to pick repositories: stars, forks, issues, size, pushed, updated, created, name (e.g. --limit 30 --sort-by stars)"),
+) -> None:
+    """Scan existing CycloneDX SBOMs for known vulnerabilities using Grype."""
+
+    if not organization and not repo:
+        console.print("[bold red]Error:[/] Provide --organization and/or --repo.")
+        raise typer.Exit(1)
+
+    org_name, repo_name = _parse_target(organization, repo)
+
+    grype_version = _grype_available()
+    if grype_version is None:
+        console.print("[bold red]Error:[/] Grype not found in PATH. Install Grype first (see README.md).")
+        raise typer.Exit(1)
+    console.print(f"[green]Using Grype version:[/] {grype_version}")
+
+    sboms_path = Path(sbom_dir)
+    if not sboms_path.exists():
+        console.print(
+            f"[bold red]Error:[/] SBOM directory '{sboms_path}' does not exist. "
+            "Generate SBOMs first, e.g. with 'miner sbom'."
+        )
+        raise typer.Exit(1)
+
+    if repo_name:
+        repos = [_make_single_repo(org_name, repo_name)]
+        console.print(f"[green]Scanning SBOM for repository:[/] {org_name}/{repo_name}")
+    else:
+        try:
+            repos = fetch_repos(org_name)
+        except Exception as e:
+            console.print(f"[bold red]Error fetching repositories:[/] {e}")
+            raise typer.Exit(1)
+        console.print(f"[green]Found {len(repos)} repositories.[/]")
+        if limit is not None or sort_by:
+            try:
+                repos = _apply_sort_limit(repos, limit, sort_by)
+            except ValueError as e:
+                console.print(f"[bold red]Error:[/] {e}")
+                raise typer.Exit(1)
+            criterion = sort_by or DEFAULT_SORT_BY
+            suffix = f", max {limit}" if limit is not None else ""
+            console.print(
+                f"[green]Processing {len(repos)} repositories[/] "
+                f"(top by '{criterion}'{suffix})."
+            )
+
+    out_dir = Path(output_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    status_colors = {
+        GrypeStatus.SUCCESS: "green",
+        GrypeStatus.NO_VULNERABILITIES: "yellow",
+        GrypeStatus.FAILED: "red",
+        GrypeStatus.SKIPPED: "white",
+    }
+    severity_colors = {
+        "Critical": "bold red",
+        "High": "red",
+        "Medium": "yellow",
+        "Low": "cyan",
+        "Negligible": "dim",
+    }
+
+    results: list[GrypeResult] = []
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        console=console,
+    ) as progress:
+        task = progress.add_task("Scanning SBOMs with Grype...", total=len(repos))
+
+        for repo_entry in repos:
+            sbom_path = sboms_path / f"{repo_entry.name}.cdx.json"
+            report_file = out_dir / f"{repo_entry.name}.json"
+
+            progress.update(task, description=f"[bold]Scanning {repo_entry.name}[/]")
+            result = _build_grype_result(
+                org_name,
+                repo_entry.name,
+                sbom_path,
+                report_file,
+                grype_version,
+            )
+            results.append(result)
+
+            color = status_colors.get(result.status, "white")
+            breakdown = " ".join(
+                f"[{severity_colors.get(sev, 'white')}]{sev}: {count}[/]"
+                for sev, count in (result.severity_counts or {}).items()
+                if count
+            )
+            console.print(
+                f"  [{color}]{result.full_name}: {result.status.value}[/]"
+                + (f" - {result.error_message}" if result.error_message else "")
+                + (f" ({breakdown})" if breakdown else "")
+            )
+            progress.advance(task)
+
+    summary = GrypeSummary(
+        repositories=len(results),
+        success=sum(1 for r in results if r.status is GrypeStatus.SUCCESS),
+        no_vulnerabilities=sum(1 for r in results if r.status is GrypeStatus.NO_VULNERABILITIES),
+        failed=sum(1 for r in results if r.status is GrypeStatus.FAILED),
+        skipped=sum(1 for r in results if r.status is GrypeStatus.SKIPPED),
+        vulnerabilities=sum(r.vulnerabilities for r in results),
+        severity_counts=_sum_severity_counts(results),
+    )
+    report = GrypeReport(
+        organization=org_name,
+        generated_at=datetime.now(timezone.utc),
+        grype_version=grype_version,
+        summary=summary,
+        repositories=results,
+    )
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    report_path = out_dir / "grype-report.json"
+    report_path.write_text(
+        json.dumps(report.to_ordered_json(), indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    console.print(f"\n[bold green]Grype report written to {report_path}[/]")
+
+    # Only fail the whole run when nothing at all could be scanned; a single
+    # bad SBOM should not discard the repositories that did succeed.
+    if results and all(r.status is GrypeStatus.FAILED for r in results):
+        raise typer.Exit(1)
+
+
 def _parse_target(organization: str | None, repo: str | None) -> tuple[str, str | None]:
     """Parse --organization and --repo into (org, repo_name | None)."""
     if repo and "/" in repo:
@@ -486,6 +639,77 @@ def _syft_available() -> str | None:
     except Exception as e:
         console.print(f"[yellow]Warning: could not determine Syft version: {e}[/]")
         return None
+
+
+def _grype_available() -> str | None:
+    """Return the installed Grype version string, or None if Grype is not usable."""
+    if shutil.which("grype") is None:
+        return None
+    try:
+        return get_grype_version()
+    except Exception as e:
+        console.print(f"[yellow]Warning: could not determine Grype version: {e}[/]")
+        return None
+
+
+def _sum_severity_counts(results: list[GrypeResult]) -> dict[str, int]:
+    """Aggregate per-severity counts across results, keeping a stable key set."""
+    totals = {severity: 0 for severity in SEVERITIES}
+    for result in results:
+        for severity, count in (result.severity_counts or {}).items():
+            totals[severity] = totals.get(severity, 0) + count
+    return totals
+
+
+def _build_grype_result(
+    organization: str,
+    name: str,
+    sbom_path: Path,
+    report_path: Path,
+    grype_version: str = "",
+) -> GrypeResult:
+    """Scan one CycloneDX SBOM with Grype and return its GrypeResult.
+
+    Distinguishes a missing SBOM (SKIPPED), a failed run (FAILED), a clean
+    scan (NO_VULNERABILITIES) and a scan with matches (SUCCESS). Never
+    raises: failures are recorded in the result.
+    """
+    full_name = f"{organization}/{name}"
+    scanned_at = datetime.now(timezone.utc)
+
+    def _failed(message: str, status: GrypeStatus = GrypeStatus.FAILED) -> GrypeResult:
+        return GrypeResult(
+            full_name=full_name,
+            scanned_at=scanned_at,
+            grype_version=grype_version,
+            status=status,
+            error_message=message,
+        )
+
+    if not sbom_path.exists():
+        return _failed(f"SBOM not found at {sbom_path}", GrypeStatus.SKIPPED)
+
+    try:
+        scan_sbom(sbom_path, report_path)
+    except Exception as e:
+        return _failed(f"Grype scan failed: {e}")
+
+    try:
+        vulnerabilities = count_vulnerabilities(report_path)
+        counts = severity_counts(report_path)
+    except Exception as e:
+        return _failed(f"Could not read Grype report {report_path}: {e}")
+
+    return GrypeResult(
+        full_name=full_name,
+        scanned_at=scanned_at,
+        grype_version=grype_version,
+        status=GrypeStatus.NO_VULNERABILITIES if vulnerabilities == 0 else GrypeStatus.SUCCESS,
+        vulnerabilities=vulnerabilities,
+        severity_counts=counts,
+        sbom_path=str(sbom_path),
+        report_path=str(report_path.resolve()),
+    )
 
 
 def _build_sbom_result(

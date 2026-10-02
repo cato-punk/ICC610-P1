@@ -19,8 +19,9 @@ Esta herramienta automatiza el proceso de:
 - Python 3.10 o superior
 - [CodeQL CLI](https://codeql.github.com/docs/codeql-cli/) instalado y disponible en tu PATH
 - [Syft](https://github.com/anchore/syft) instalado y disponible en tu PATH (ver [Instalación de Syft](#instalación-de-syft)); solo es necesario para la generación de SBOM
+- [Grype](https://github.com/anchore/grype) instalado y disponible en tu PATH (ver [Instalación de Grype](#instalación-de-grype)); solo es necesario para el escaneo de vulnerabilidades
 - Git instalado
-- Un personal access token de GitHub
+- Un personal access token de GitHub (solo para elevar el límite de peticiones a la API; ver [Token de GitHub](#token-de-github))
 
 ## Instalación
 
@@ -74,11 +75,47 @@ syft version
 
 > **Nota:** Solo es necesario para la generación de SBOM. `miner scan` igualmente ejecuta el análisis de CodeQL si Syft no está instalado, pero omite los SBOM con una advertencia.
 
+## Instalación de Grype
+
+Grype es una CLI externa (binario de Go) de [Anchore](https://github.com/anchore/grype), la misma herramienta que consume los SBOM que genera Syft. Se invoca mediante `subprocess` y debe estar disponible en tu `PATH`.
+
+**Windows (winget):**
+
+```powershell
+winget install anchore.grype
+```
+
+**Windows/macOS/Linux (Scoop):**
+
+```powershell
+scoop install grype
+```
+
+**macOS (Homebrew):**
+
+```bash
+brew install grype
+```
+
+**Linux/macOS (script de instalación oficial, ver la [documentación de Grype](https://github.com/anchore/grype#installation)):**
+
+```bash
+curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+```
+
+Verificar la instalación:
+
+```powershell
+grype version
+```
+
+> **Nota:** Solo es necesario para `miner grype`. En su primera ejecución Grype descarga su base de datos de vulnerabilidades, por lo que el primer escaneo tarda notablemente más que los siguientes.
+
 ## Configuración
 
 ### Token de GitHub
 
-El miner requiere un personal access token de GitHub para autenticar las solicitudes a la API.
+El miner necesita un personal access token de GitHub para sus solicitudes a la API.
 
 Crea un archivo `.env` en la raíz del proyecto (no lo subas al control de versiones):
 
@@ -86,7 +123,7 @@ Crea un archivo `.env` en la raíz del proyecto (no lo subas al control de versi
 GITHUB_TOKEN=ghp_your_token_here
 ```
 
-El token se **carga automáticamente** desde el archivo `.env` — no es necesario configurar variables de entorno manualmente. También puedes definirlo como variable de entorno si lo prefieres:
+El token se **carga automáticamente** desde el archivo `.env` — no es necesario configurar variables de entorno manualmente. La búsqueda sube desde la ubicación del paquete instalado y luego desde el directorio actual, por lo que funciona desde cualquier subcarpeta del proyecto. También puedes definirlo como variable de entorno si lo prefieres, en cuyo caso la variable de entorno tiene prioridad:
 
 ```powershell
 # Windows PowerShell
@@ -96,9 +133,15 @@ $env:GITHUB_TOKEN = "ghp_your_token_here"
 export GITHUB_TOKEN="ghp_your_token_here"
 ```
 
-> **Scopes requeridos para el token:** `public_repo` (solo repos públicos) o `repo` (repos públicos + privados).
+> **Scopes: no se requiere ninguno.** Todos los endpoints que usa el miner — `GET /orgs/{org}/repos` y `GET /repos/{owner}/{repo}/languages` — devuelven datos públicos. El token existe únicamente para elevar el límite de peticiones de **60 a 5.000 por hora**, lo que importa al escanear una organización grande.
+>
+> Los scopes clásicos `public_repo` y `repo` **no** son necesarios y no deberían otorgarse: `public_repo` permite *escribir* en tus repositorios públicos, y `repo` concede acceso completo de lectura y escritura a *todos* tus repositorios privados. Esta herramienta solo lee.
+>
+> **Recomendado:** un [personal access token de alcance fino](https://github.com/settings/personal-access-tokens/new) **sin ningún acceso a repositorios** (Permissions → Repositories: *None*). Ofrece el límite más alto sin poder tocar tus repositorios.
 
 **Importante:** Nunca subas tu token al control de versiones. El `.gitignore` ya excluye los archivos `.env`.
+
+> **Los repositorios privados no están soportados.** El clonado se realiza de forma anónima con `git`, por lo que un token con scope `repo` permitiría que el *listado* de repositorios funcionara mientras el clonado seguiría fallando. Escanea únicamente repositorios públicos.
 
 ### Packs de consultas de CodeQL
 
@@ -129,7 +172,7 @@ miner scan --organization example-org -O results.json --packs-root C:\path\to\co
 
 **Opción B — Packs del registry:**
 
-Descarga los packs desde el GitHub Container Registry (requiere un token con scope `read:packages`):
+Descarga los packs que necesites directamente con la CLI de CodeQL. `codeql pack download` contacta por su cuenta el registry de paquetes de CodeQL usando la autenticación que tenga configurada la CLI de CodeQL — **no** lee `GITHUB_TOKEN` y no necesita ningún scope `read:packages`:
 
 ```powershell
 codeql pack download codeql/python-security-extended
@@ -154,12 +197,13 @@ python, java, javascript, typescript, csharp, cpp, c, go, ruby, swift, rust
 
 ## Uso
 
-La CLI tiene dos comandos:
+La CLI tiene tres comandos:
 
 - `miner scan ...` — Análisis de seguridad con CodeQL (y generación de SBOM, si Syft está instalado)
 - `miner sbom ...` — Generación de SBOM solo, sobre repositorios ya clonados (sin CodeQL)
+- `miner grype ...` — Escaneo de vulnerabilidades sobre SBOM existentes usando Grype (sin clonar, sin CodeQL)
 
-> **Nota:** Con más de un comando registrado, Typer exige el nombre del subcomando (`miner scan ...`, `miner sbom ...`). Las versiones anteriores de este proyecto «aplanaban» el único comando como `miner --organization ...`; esa invocación ya no funciona.
+> **Nota:** Con más de un comando registrado, Typer exige el nombre del subcomando (`miner scan ...`, `miner sbom ...`, `miner grype ...`). Las versiones anteriores de este proyecto «aplanaban» el único comando como `miner --organization ...`; esa invocación ya no funciona.
 
 ### Escanear toda una organización
 
@@ -209,6 +253,47 @@ Los repositorios que no fueron clonados (no existen en `--workdir`) se reportan 
 
 > **Nota:** Re-ejecutar `scan` contra el mismo `--workdir` funciona bien — cada repositorio se re-clona desde cero antes del análisis.
 
+### Escanear SBOM en busca de vulnerabilidades (Grype)
+
+`miner grype` toma los SBOM CycloneDX producidos por `miner sbom` (o `miner scan`) y compara sus componentes con la base de datos de vulnerabilidades de Grype. No clona ni ejecuta CodeQL, por lo que es con diferencia el comando más barato de re-ejecutar.
+
+```powershell
+# 1) Generar los SBOM
+miner sbom --organization <org-name> --workdir repos --output-dir sbom-output
+
+# 2) Escanearlos en busca de vulnerabilidades conocidas
+miner grype --organization <org-name>
+```
+
+Esto escribe un reporte JSON de Grype por repositorio más un reporte agregado `grype-output/grype-report.json`:
+
+```powershell
+miner grype --organization <org-name> --limit 30 --sort-by stars
+```
+
+`--limit` y `--sort-by` se comportan exactamente igual que en `scan` y `sbom`: la lista de repositorios se ordena por el criterio elegido y se trunca, y luego se escanea el SBOM de cada repositorio si existe.
+
+También se puede procesar un solo repositorio con `--repo`:
+
+```powershell
+miner grype --repo mozilla/send
+```
+
+Cada repositorio termina con uno de cuatro estados:
+
+| Estado | Significado |
+|--------|-------------|
+| `success` | Grype se ejecutó y encontró al menos una coincidencia de vulnerabilidad |
+| `no_vulnerabilities` | Grype se ejecutó y no encontró coincidencias |
+| `skipped` | No se encontró un archivo SBOM para ese repositorio en `--sbom-dir` |
+| `failed` | Grype falló al ejecutarse, o su reporte no se pudo leer |
+
+Los SBOM ausentes se reportan como `skipped` en lugar de `failed`, por lo que apuntar el comando a un directorio parcialmente poblado no es un error. El comando termina con código distinto de cero solo cuando **todos** los repositorios escaneados fallaron.
+
+> **Nota:** `--sbom-dir` tiene como valor por defecto `sbom-output/sboms`, que es donde escribe `miner sbom`. Para consumir los SBOM producidos por `miner scan`, usa `--sbom-dir sboms`.
+
+> **Los conteos son de coincidencias, no de CVEs distintos.** Una única biblioteca vulnerable requerida por tres paquetes de un repositorio se cuenta tres veces.
+
 ### Opciones — `miner scan`
 
 | Opción | Corta | Descripción | Valor por defecto |
@@ -234,7 +319,18 @@ Los repositorios que no fueron clonados (no existen en `--workdir`) se reportan 
 | `--limit` | `-n` | Procesar como máximo esta cantidad de repositorios (ej. `--limit 30`) | Todos |
 | `--sort-by` | | Criterio para elegir repositorios: `stars`, `forks`, `issues`, `size`, `pushed`, `updated`, `created`, `name` | `stars` (solo cuando se usa `--limit`) |
 
-> Para ambos comandos se requiere al menos uno de `--organization` o `--repo`.
+### Opciones — `miner grype`
+
+| Opción | Corta | Descripción | Valor por defecto |
+|--------|-------|-------------|-------------------|
+| `--organization` | `-o` | Nombre de la organización de GitHub | - |
+| `--repo` | `-r` | Repositorio único (ej. `mozilla/send`) | - |
+| `--sbom-dir` | | Directorio que contiene los archivos SBOM CycloneDX | `sbom-output/sboms` |
+| `--output-dir` | `-O` | Directorio de salida para los reportes de Grype y el reporte agregado | `grype-output` |
+| `--limit` | `-n` | Procesar como máximo esta cantidad de repositorios (ej. `--limit 30`) | Todos |
+| `--sort-by` | | Criterio para elegir repositorios: `stars`, `forks`, `issues`, `size`, `pushed`, `updated`, `created`, `name` | `stars` (solo cuando se usa `--limit`) |
+
+> Para los tres comandos se requiere al menos uno de `--organization` o `--repo`.
 
 ### Ejemplos
 
@@ -461,10 +557,12 @@ Instalar solo las dependencias (`pip install -e ".[dev]"`) **no alcanza**. El mi
 
 | Pieza faltante | Síntoma |
 |----------------|---------|
-| `GITHUB_TOKEN` no definido (sin archivo `.env`) | `RuntimeError: GITHUB_TOKEN environment variable is not set.` |
+| `GITHUB_TOKEN` no definido (sin archivo `.env`) | `RuntimeError: GITHUB_TOKEN is not set. Create a .env file in the project root...` |
 | CodeQL CLI no instalado o no en `PATH` | `FileNotFoundError` o `codeql: command not found` |
 | Sin query packs disponibles | `Query suite not found at .../codeql-suites/python-security-extended.qls` |
 | Syft no instalado o no en `PATH` | `miner sbom` termina con `Syft not found in PATH`; `miner scan` omite los SBOM con una advertencia |
+| Grype no instalado o no en `PATH` | `miner grype` termina con `Grype not found in PATH` |
+| Base de datos de vulnerabilidades de Grype aún no descargada | La primera ejecución de `miner grype` es lenta mientras Grype descarga su BD |
 | Git no instalado | Todos los repos se reportan como `clone_failed` |
 
 **Checklist completo antes de ejecutar un scan:**
@@ -473,7 +571,8 @@ Instalar solo las dependencias (`pip install -e ".[dev]"`) **no alcanza**. El mi
 2. `codeql version` funciona desde tu terminal.
 3. Los query packs están disponibles — normalmente se **auto-descargan** en el primer `scan` (ver [Packs de consultas de CodeQL](#packs-de-consultas-de-codeql)); o desactivalo con `--no-fetch-packs` y provéelos tú mismo.
 4. `syft version` funciona desde tu terminal (solo si quieres SBOMs).
-5. `git version` funciona desde tu terminal.
+5. `grype version` funciona desde tu terminal (solo si quieres escaneo de vulnerabilidades).
+6. `git version` funciona desde tu terminal.
 
 Si todo esto se cumple, `miner scan --organization <org-name> -O results.json` o `miner scan --repo <org>/<repo> -O results.json` deberían producir un reporte JSON válido, y `miner sbom --organization <org-name> --workdir repos --output-dir sbom-output` debería producir el reporte de SBOM.
 

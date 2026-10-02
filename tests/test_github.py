@@ -1,11 +1,118 @@
 """Tests for GitHub API module."""
 
 import json
+import os
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from miner.github import GitHubRepo, fetch_languages, fetch_repos
+from miner.github import (
+    GitHubRepo,
+    _find_dotenv,
+    _get_token,
+    _load_dotenv,
+    _parse_dotenv,
+    fetch_languages,
+    fetch_repos,
+)
+
+
+class TestDotenv:
+    def test_finds_env_in_project_root(self, tmp_path: Path, monkeypatch):
+        root = tmp_path / "project"
+        (root / "miner").mkdir(parents=True)
+        (root / ".env").write_text("GITHUB_TOKEN=from-root\n", encoding="utf-8")
+        monkeypatch.setattr("miner.github.__file__", str(root / "miner" / "github.py"))
+
+        assert _find_dotenv() == root / ".env"
+
+    def test_walks_up_from_nested_cwd(self, tmp_path: Path, monkeypatch):
+        root = tmp_path / "project"
+        nested = root / "data" / "repos"
+        nested.mkdir(parents=True)
+        (root / ".env").write_text("GITHUB_TOKEN=x\n", encoding="utf-8")
+        # Package is installed in site-packages, so only cwd can find the file.
+        monkeypatch.setattr(
+            "miner.github.__file__", str(tmp_path / "site-packages" / "miner" / "github.py")
+        )
+        monkeypatch.chdir(nested)
+
+        assert _find_dotenv() == root / ".env"
+
+    def test_returns_none_when_absent(self, tmp_path: Path, monkeypatch):
+        package = tmp_path / "site-packages" / "miner"
+        package.mkdir(parents=True)
+        monkeypatch.setattr("miner.github.__file__", str(package / "github.py"))
+        monkeypatch.chdir(tmp_path)
+
+        assert _find_dotenv() is None
+
+    def test_parse_handles_comments_quotes_and_blanks(self, tmp_path: Path):
+        env = tmp_path / ".env"
+        env.write_text(
+            "# a comment\n"
+            "\n"
+            "GITHUB_TOKEN='ghp_abc'\n"
+            'OTHER_TOKEN="quoted value"\n'
+            "EMPTY=\n"
+            "MALFORMED_LINE\n"
+            "WITH_EQUALS=a=b=c\n",
+            encoding="utf-8",
+        )
+
+        assert _parse_dotenv(env) == {
+            "GITHUB_TOKEN": "ghp_abc",
+            "OTHER_TOKEN": "quoted value",
+            "EMPTY": "",
+            "WITH_EQUALS": "a=b=c",
+        }
+
+    def test_load_populates_environment(self, tmp_path: Path, monkeypatch):
+        root = tmp_path / "project"
+        (root / "miner").mkdir(parents=True)
+        (root / ".env").write_text("GITHUB_TOKEN=from-root\nNEW_VAR=new-value\n", encoding="utf-8")
+        monkeypatch.setattr("miner.github.__file__", str(root / "miner" / "github.py"))
+        monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+        monkeypatch.delenv("NEW_VAR", raising=False)
+
+        _load_dotenv()
+
+        assert os.environ["GITHUB_TOKEN"] == "from-root"
+        assert os.environ["NEW_VAR"] == "new-value"
+
+    def test_existing_environment_wins(self, tmp_path: Path, monkeypatch):
+        root = tmp_path / "project"
+        (root / "miner").mkdir(parents=True)
+        (root / ".env").write_text("GITHUB_TOKEN=from-root\n", encoding="utf-8")
+        monkeypatch.setattr("miner.github.__file__", str(root / "miner" / "github.py"))
+        monkeypatch.setenv("GITHUB_TOKEN", "from-shell")
+
+        _load_dotenv()
+
+        assert os.environ["GITHUB_TOKEN"] == "from-shell"
+
+    def test_missing_env_is_a_noop(self, tmp_path: Path, monkeypatch):
+        package = tmp_path / "site-packages" / "miner"
+        package.mkdir(parents=True)
+        monkeypatch.setattr("miner.github.__file__", str(package / "github.py"))
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+
+        _load_dotenv()
+
+        assert "GITHUB_TOKEN" not in os.environ
+
+    def test_get_token_raises_helpful_error(self, monkeypatch):
+        monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+
+        with pytest.raises(RuntimeError, match=r"\.env"):
+            _get_token()
+
+    def test_get_token_returns_env_value(self, monkeypatch):
+        monkeypatch.setenv("GITHUB_TOKEN", "ghp_xyz")
+
+        assert _get_token() == "ghp_xyz"
 
 
 class TestFetchRepos:

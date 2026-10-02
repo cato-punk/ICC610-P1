@@ -7,7 +7,7 @@ analisis de seguridad y Syft para la generacion de SBOM (CycloneDX).
 
 ```
 .
-├── analyzer/          # CodeQL (codeql.py) y parseo de SARIF (sarif.py)
+├── analyzer/          # CodeQL (codeql.py), Grype (grype.py) y parseo de SARIF (sarif.py)
 ├── data/              # Datos de entrada/salida generados
 ├── docs/              # Documentacion (README completo en espanol e ingles)
 ├── miner/             # Orquestacion: CLI, API de GitHub y operaciones git
@@ -33,11 +33,12 @@ pip install -e ".[dev]"
 
 ## Requisitos externos
 
-Ademas de las dependencias de Python, la herramienta orquesta dos binarios
+Ademas de las dependencias de Python, la herramienta orquesta tres binarios
 externos que deben estar en el `PATH`:
 
 - [CodeQL CLI](https://codeql.github.com/docs/codeql-cli/)
 - [Syft](https://github.com/anchore/syft) (opcional, solo para SBOM)
+- [Grype](https://github.com/anchore/grype) (opcional, solo para escaneo de vulnerabilidades)
 
 ## Configuracion
 
@@ -60,6 +61,9 @@ miner scan --repo OWASP/NodeGoat -O nodegoat.json
 
 # Solo SBOM, reutilizando clones existentes
 miner sbom --organization <org> --workdir repos --output-dir sbom-output
+
+# Escanear los SBOM existentes en busca de vulnerabilidades conocidas
+miner grype --organization <org>
 ```
 
 ## Pruebas
