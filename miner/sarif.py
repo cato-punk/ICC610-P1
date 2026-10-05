@@ -7,6 +7,24 @@ from pathlib import Path
 
 from miner.models import Finding
 
+#agregamos helpers
+def _security_severity(rule_info: dict) -> float | None:
+    raw = rule_info.get("properties", {}).get("security-severity")
+    try:
+        return float(raw) if raw is not None else None
+    except (TypeError, ValueError):
+        return None
+
+
+def _cwes(rule_info: dict) -> list[str]:
+    cwes: set[str] = set()
+    for tag in rule_info.get("properties", {}).get("tags", []):
+        if tag.startswith("external/cwe/cwe-"):
+            try:
+                cwes.add(f"CWE-{int(tag.rsplit('-', 1)[1])}")
+            except ValueError:
+                continue
+    return sorted(cwes)
 
 def parse_sarif(sarif_path: Path) -> list[Finding]:
     with open(sarif_path, "r", encoding="utf-8") as f:
@@ -15,9 +33,9 @@ def parse_sarif(sarif_path: Path) -> list[Finding]:
     findings: list[Finding] = []
 
     for run in sarif_data.get("runs", []):
-        tool = run.get("tool", {}).get("driver", {})
-        rules = {r["id"]: r for r in tool.get("rules", [])}
-
+        tool = run.get("tool", {})
+        components = [tool.get("driver", {}), *tool.get("extensions", [])]
+        rules = {r["id"]: r for c in components for r in c.get("rules", [])}
         for result in run.get("results", []):
             rule_id = result.get("ruleId", "unknown")
             message = result.get("message", {}).get("text", "")
@@ -59,6 +77,10 @@ def parse_sarif(sarif_path: Path) -> list[Finding]:
                         start_line=start_line,
                         end_line=end_line,
                         code_snippet=code_snippet,
+                        rule_name=(rule_info.get("shortDescription") or {}).get("text")
+                        or rule_info.get("name"),
+                        cwe=_cwes(rule_info),
+                        security_severity=_security_severity(rule_info),
                     )
                 )
 
