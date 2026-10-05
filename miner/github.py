@@ -76,6 +76,11 @@ class GitHubRepo:
     created_at: str = ""
     updated_at: str = ""
     pushed_at: str = ""
+    fork: bool = False
+    archived: bool = False
+    language: str = ""
+    full_name: str = ""
+    html_url: str = ""
 
 
 def _get_token() -> str:
@@ -98,7 +103,7 @@ def _make_headers() -> dict[str, str]:
 def fetch_repos(organization: str) -> list[GitHubRepo]:
     repos: list[GitHubRepo] = []
     url = f"https://api.github.com/orgs/{organization}/repos"
-    params = {"per_page": 100, "page": 1}
+    params = {"per_page": 100, "page": 1, "type": "public"}
 
     while True:
         response = requests.get(url, headers=_make_headers(), params=params, timeout=30)
@@ -120,6 +125,11 @@ def fetch_repos(organization: str) -> list[GitHubRepo]:
                     created_at=repo.get("created_at") or "",
                     updated_at=repo.get("updated_at") or "",
                     pushed_at=repo.get("pushed_at") or "",
+                    fork=bool(repo.get("fork")),
+                    archived=bool(repo.get("archived")),
+                    language=repo.get("language") or "",
+                    full_name=repo.get("full_name") or "",
+                    html_url=repo.get("html_url") or "",
                 )
             )
         if len(data) < 100:
