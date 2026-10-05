@@ -25,6 +25,9 @@ class Finding(BaseModel):
     start_line: int
     end_line: Optional[int] = None
     code_snippet: Optional[str] = None
+    rule_name: Optional[str] = None
+    cwe: list[str] = Field(default_factory=list)
+    security_severity: Optional[float] = None
 
 
 class RepositoryResult(BaseModel):
