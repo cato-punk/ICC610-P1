@@ -1,7 +1,18 @@
 """CLI interface using Typer."""
 
 from __future__ import annotations
-
+from .dataset import build_findings, build_repositories, write_jsonl
+from .selection import (
+    DEFAULT_SORT_BY,
+    LANGUAGE_NAME_ALIASES,
+    SORT_CRITERIA,
+    SUPPORTED_CODEQL_LANGUAGES,
+    SelectionCriteria,
+    apply_sort_limit as _apply_sort_limit,
+    filter_repos,
+    normalize_language as _normalize_language,
+    write_manifest,
+)
 import json
 import shutil
 import tempfile
@@ -43,22 +54,6 @@ from .git_ops import cleanup, clone_repo
 app = typer.Typer()
 console = Console()
 
-SUPPORTED_CODEQL_LANGUAGES = {
-    "python", "java", "javascript", "typescript",
-    "csharp", "cpp", "c", "go", "ruby", "swift", "rust",
-}
-
-# GitHub reports some languages with different names than CodeQL uses.
-LANGUAGE_NAME_ALIASES = {
-    "c++": "cpp",
-    "c#": "csharp",
-}
-
-
-def _normalize_language(language: str) -> str:
-    """Map a GitHub API language name to a CodeQL language id (lowercase)."""
-    return LANGUAGE_NAME_ALIASES.get(language.lower(), language.lower())
-
 
 def _truncate(message: str, limit: int = 160) -> str:
     """Collapse whitespace and truncate long messages for compact reports."""
@@ -66,43 +61,6 @@ def _truncate(message: str, limit: int = 160) -> str:
     if len(message) <= limit:
         return message
     return message[: limit - 3] + "..."
-
-DEFAULT_SORT_BY = "stars"
-
-SORT_CRITERIA = {
-    "stars": "stargazers_count",
-    "forks": "forks_count",
-    "issues": "open_issues_count",
-    "size": "size",
-    "pushed": "pushed_at",
-    "updated": "updated_at",
-    "created": "created_at",
-    "name": "name",
-}
-
-
-def _apply_sort_limit(repos, limit: int | None, sort_by: str | None):
-    """Sort repositories by a criterion and optionally truncate to ``limit``.
-
-    Sorting is descending ("top N"). ``name`` is the exception and sorts
-    ascending (A→Z). When only ``--limit`` is given, defaults to sorting by
-    stars. Raises ``ValueError`` for an unknown criterion.
-    """
-    if limit is None and sort_by is None:
-        return repos
-
-    criterion = sort_by or DEFAULT_SORT_BY
-    field = SORT_CRITERIA.get(criterion)
-    if field is None:
-        raise ValueError(
-            f"Unknown --sort-by criterion '{criterion}'. "
-            f"Use one of: {', '.join(sorted(SORT_CRITERIA))}."
-        )
-
-    ordered = sorted(repos, key=lambda r: getattr(r, field), reverse=field != "name")
-    if limit is not None:
-        return ordered[:limit]
-    return ordered
 
 
 @app.command()
@@ -484,6 +442,125 @@ def grype(
     if results and all(r.status is GrypeStatus.FAILED for r in results):
         raise typer.Exit(1)
 
+
+def _resolve_packs(packs_root: str | None) -> Path | None:
+    if packs_root:
+        return Path(packs_root)
+    packs = detect_packs_root()
+    if packs is None:
+        console.print("[cyan]No local CodeQL packs found; cloning github/codeql...[/]")
+        try:
+            packs = fetch_packs_root()
+        except Exception as e:
+            console.print(f"[yellow]Could not fetch CodeQL packs ({e}); using registry packs.[/]")
+    return packs
+
+
+@app.command()
+def run(
+    organization: str = typer.Option(..., "--organization", "-o", help="GitHub organization name"),
+    data_dir: str = typer.Option("data", "--data-dir", "-d", help="Output directory for the dataset"),
+    workdir: str = typer.Option(None, "--workdir", "-w", help="Working directory for clones and databases"),
+    packs_root: str = typer.Option(None, "--packs-root", "-p", help="Path to CodeQL query packs"),
+    max_repos: int = typer.Option(40, "--max-repos", min=1, max=50, help="Max candidate repositories (spec: at most 50)"),
+    target: int = typer.Option(25, "--target", min=1, max=50, help="Stop after this many fully processed repositories (spec: at least 20)"),
+    sort_by: str = typer.Option(DEFAULT_SORT_BY, "--sort-by", help="Ordering of eligible repositories"),
+    max_size_kb: int = typer.Option(100_000, "--max-size-kb", help="Skip repositories larger than this (KB)"),
+    pushed_within_days: int = typer.Option(730, "--pushed-within-days", help="Skip repositories without pushes in this many days"),
+    include_forks: bool = typer.Option(False, "--include-forks/--exclude-forks"),
+    include_archived: bool = typer.Option(False, "--include-archived/--exclude-archived"),
+) -> None:
+    """Full pipeline: select repos, clone, CodeQL, Syft, Grype and build the dataset."""
+
+    out_dir = Path(data_dir)
+    sbom_dir = out_dir / "raw" / "sboms"
+    grype_dir = out_dir / "raw" / "grype"
+    for d in (sbom_dir, grype_dir):
+        d.mkdir(parents=True, exist_ok=True)
+
+    if shutil.which("codeql") is None:
+        console.print("[bold red]Error:[/] CodeQL not found in PATH.")
+        raise typer.Exit(1)
+    syft_version = _syft_available()
+    grype_version = _grype_available()
+    if syft_version is None or grype_version is None:
+        console.print("[bold red]Error:[/] 'miner run' requires Syft and Grype in PATH.")
+        raise typer.Exit(1)
+
+    packs = _resolve_packs(packs_root)
+    base_dir = Path(workdir) if workdir else Path(tempfile.mkdtemp(prefix="miner_"))
+    base_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        all_repos = fetch_repos(organization)
+    except Exception as e:
+        console.print(f"[bold red]Error fetching repositories:[/] {e}")
+        raise typer.Exit(1)
+
+    criteria = SelectionCriteria(
+        organization=organization,
+        exclude_forks=not include_forks,
+        exclude_archived=not include_archived,
+        max_size_kb=max_size_kb,
+        pushed_within_days=pushed_within_days,
+        sort_by=sort_by,
+        max_repos=max_repos,
+    )
+    eligible, rejected = filter_repos(all_repos, criteria)
+    try:
+        candidates = _apply_sort_limit(eligible, max_repos, sort_by)
+    except ValueError as e:
+        console.print(f"[bold red]Error:[/] {e}")
+        raise typer.Exit(1)
+
+    write_manifest(out_dir / "selection.json", criteria, len(all_repos), len(eligible), candidates, rejected)
+    console.print(
+        f"[green]{len(all_repos)} repos in {organization}; {len(eligible)} eligible; "
+        f"{len(candidates)} candidates.[/] Rejected: "
+        + ", ".join(f"{k}={len(v)}" for k, v in sorted(rejected.items()))
+    )
+
+    meta = {r.name: r for r in candidates}
+    results: list[RepositoryResult] = []
+    grype_results: list[GrypeResult] = []
+    completed = 0
+
+    for repo_entry in candidates:
+        if completed >= target:
+            break
+        console.print(f"[bold]Processing {repo_entry.name}[/] ({completed}/{target} completed)")
+        result = _analyze_repo(
+            organization, repo_entry.name, repo_entry.clone_url, repo_entry.languages_url,
+            base_dir, packs, sbom_dir, syft_version, keep_clones=False,
+        )
+        grype_result = _build_grype_result(
+            organization, repo_entry.name,
+            sbom_dir / f"{repo_entry.name}.cdx.json",
+            grype_dir / f"{repo_entry.name}.json",
+            grype_version,
+        )
+        results.append(result)
+        grype_results.append(grype_result)
+
+        fully_done = (
+            result.status is RepoStatus.ANALYZED
+            and grype_result.status in (GrypeStatus.SUCCESS, GrypeStatus.NO_VULNERABILITIES)
+        )
+        completed += int(fully_done)
+        console.print(f"  codeql={result.status.value} grype={grype_result.status.value}")
+
+    findings = build_findings(organization, results, grype_results)
+    repositories = build_repositories(organization, results, grype_results, meta)
+    n_findings = write_jsonl(out_dir / "findings.jsonl", findings)
+    n_repos = write_jsonl(out_dir / "repositories.jsonl", repositories)
+
+    console.print(
+        f"\n[bold green]Dataset written to {out_dir}/[/] "
+        f"({n_repos} repositories, {n_findings} findings; {completed} fully processed)."
+    )
+    if completed < 20:
+        console.print("[bold yellow]Warning:[/] fewer than 20 repositories fully processed (spec minimum). "
+                      "Raise --max-repos or relax the filters.")
 
 def _parse_target(organization: str | None, repo: str | None) -> tuple[str, str | None]:
     """Parse --organization and --repo into (org, repo_name | None)."""
