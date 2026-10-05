@@ -102,3 +102,29 @@ def severity_counts(report_path: Path) -> dict[str, int]:
         severity = (match.get("vulnerability") or {}).get("severity", "")
         counts[severity] = counts.get(severity, 0) + 1
     return counts
+
+def iter_matches(report_path: Path):
+    """Yield one normalized dict per vulnerability match in a Grype report."""
+    for match in _load_report(report_path).get("matches", []):
+        vuln = match.get("vulnerability") or {}
+        artifact = match.get("artifact") or {}
+        fix = vuln.get("fix") or {}
+        scores = [
+            (c.get("metrics") or {}).get("baseScore")
+            for c in vuln.get("cvss") or []
+        ]
+        scores = [s for s in scores if isinstance(s, (int, float))]
+        yield {
+            "vuln_id": vuln.get("id"),
+            "severity": vuln.get("severity"),
+            "score": max(scores) if scores else None,
+            "package": artifact.get("name"),
+            "version": artifact.get("version"),
+            "ecosystem": artifact.get("type"),
+            "paths": [
+                loc.get("path")
+                for loc in artifact.get("locations") or []
+                if loc.get("path")
+            ],
+            "fix_versions": fix.get("versions") or [],
+        }
