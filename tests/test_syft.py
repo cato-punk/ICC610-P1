@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from reporter.syft import (
+from miner.syft import (
     count_components,
     generate_sbom,
     get_repo_commit,
@@ -32,12 +32,12 @@ def _mock_process(returncode: int = 0, stdout: str = "", stderr: str = "") -> Ma
 
 
 class TestGetSyftVersion:
-    @patch("reporter.syft.subprocess.run")
+    @patch("miner.syft.subprocess.run")
     def test_parses_version_line(self, mock_run):
         mock_run.return_value = _mock_process(stdout=SAMPLE_VERSION_OUTPUT)
         assert get_syft_version() == "1.15.1"
 
-    @patch("reporter.syft.subprocess.run")
+    @patch("miner.syft.subprocess.run")
     def test_falls_back_to_json(self, mock_run):
         mock_run.side_effect = [
             _mock_process(stdout="no structured version here"),
@@ -45,7 +45,7 @@ class TestGetSyftVersion:
         ]
         assert get_syft_version() == "0.99.0"
 
-    @patch("reporter.syft.subprocess.run")
+    @patch("miner.syft.subprocess.run")
     def test_raises_on_failure(self, mock_run):
         mock_run.return_value = _mock_process(returncode=1, stderr="syft: not found")
         with pytest.raises(RuntimeError):
@@ -53,7 +53,7 @@ class TestGetSyftVersion:
 
 
 class TestGenerateSbom:
-    @patch("reporter.syft.subprocess.run")
+    @patch("miner.syft.subprocess.run")
     def test_builds_cyclonedx_json_command(self, mock_run, tmp_path: Path):
         mock_run.return_value = _mock_process()
         source = tmp_path / "clone"
@@ -72,7 +72,7 @@ class TestGenerateSbom:
         assert str(source) in cmd
         assert f"cyclonedx-json={output}" in cmd
 
-    @patch("reporter.syft.subprocess.run")
+    @patch("miner.syft.subprocess.run")
     def test_raises_on_nonzero_exit(self, mock_run, tmp_path: Path):
         mock_run.return_value = _mock_process(returncode=1, stderr="cataloger error")
         with pytest.raises(RuntimeError):

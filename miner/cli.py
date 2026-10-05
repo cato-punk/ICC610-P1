@@ -12,16 +12,16 @@ import typer
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from analyzer.codeql import create_database, detect_packs_root, fetch_packs_root, run_analysis
-from analyzer.grype import (
+from miner.codeql import create_database, detect_packs_root, fetch_packs_root, run_analysis
+from miner.grype import (
     SEVERITIES,
     count_vulnerabilities,
     get_grype_version,
     scan_sbom,
     severity_counts,
 )
-from analyzer.sarif import parse_sarif
-from reporter.models import (
+from miner.sarif import parse_sarif
+from miner.models import (
     AnalysisSummary,
     GrypeReport,
     GrypeResult,
@@ -35,7 +35,7 @@ from reporter.models import (
     SbomStatus,
     SbomSummary,
 )
-from reporter.syft import count_components, generate_sbom, get_repo_commit, get_syft_version
+from miner.syft import count_components, generate_sbom, get_repo_commit, get_syft_version
 
 from .github import fetch_languages, fetch_repos
 from .git_ops import cleanup, clone_repo

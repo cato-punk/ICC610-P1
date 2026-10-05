@@ -28,7 +28,7 @@ miner = "miner.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["miner*", "analyzer*", "reporter*"]
+include = ["miner*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

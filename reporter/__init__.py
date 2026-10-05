@@ -1,1 +1,0 @@
-"""Generacion de reportes y SBOM."""
