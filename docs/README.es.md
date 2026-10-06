@@ -25,15 +25,19 @@ Esta herramienta automatiza el proceso de:
 
 ## Instalación
 
-```powershell
+```bash
+
+> **Recomendado:** abre el repositorio en el Dev Container (`.devcontainer/`). Ya incluye
+> Python, Node, CodeQL, Syft y Grype, así que puedes saltarte las secciones de instalación
+> de herramientas de abajo. Ver el [README principal](../README.md).
+
 # Clonar el repositorio
-git clone <repository-url>
-cd python-miner
+git clone https://github.com/cato-punk/ICC610-P1.git
+cd ICC610-P1
 
 # Crear y activar el entorno virtual
 python -m venv .venv
-.venv\Scripts\activate        # Windows PowerShell
-# source .venv/bin/activate   # macOS/Linux
+source .venv/bin/activate
 
 # Instalar el proyecto en modo de desarrollo
 pip install -e ".[dev]"
@@ -45,13 +49,13 @@ Syft es una CLI externa (binario de Go) de [Anchore](https://github.com/anchore/
 
 **Windows (winget):**
 
-```powershell
+```bash
 winget install anchore.syft
 ```
 
 **Windows/macOS/Linux (Scoop):**
 
-```powershell
+```bash
 scoop install syft
 ```
 
@@ -69,7 +73,7 @@ curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -
 
 Verificar la instalación:
 
-```powershell
+```bash
 syft version
 ```
 
@@ -105,7 +109,7 @@ curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh 
 
 Verificar la instalación:
 
-```powershell
+```bash
 grype version
 ```
 
@@ -125,7 +129,7 @@ GITHUB_TOKEN=ghp_your_token_here
 
 El token se **carga automáticamente** desde el archivo `.env` — no es necesario configurar variables de entorno manualmente. La búsqueda sube desde la ubicación del paquete instalado y luego desde el directorio actual, por lo que funciona desde cualquier subcarpeta del proyecto. También puedes definirlo como variable de entorno si lo prefieres, en cuyo caso la variable de entorno tiene prioridad:
 
-```powershell
+```bash
 # Windows PowerShell
 $env:GITHUB_TOKEN = "ghp_your_token_here"
 
@@ -151,7 +155,7 @@ El miner necesita los query packs de CodeQL para ejecutar los análisis de segur
 
 El miner puede **auto-descargar** los packs automáticamente. Si no encuentra packs locales, `miner scan` clona [github/codeql](https://github.com/github/codeql) (shallow, `--depth 1`) en `~/cybersec/codeql-repo` y lo utiliza. Desactívalo con `--no-fetch-packs`, o clónalo manualmente:
 
-```powershell
+```bash
 git clone https://github.com/github/codeql ~/cybersec/codeql-repo
 ```
 
@@ -166,15 +170,15 @@ El miner **detecta** los packs en estas ubicaciones (en orden):
 
 También puedes pasar la ruta explícitamente con `--packs-root` (cuando se pasa explícitamente, el miner nunca auto-descarga):
 
-```powershell
-miner scan --organization example-org -O results.json --packs-root C:\path\to\codeql-repo
+```bash
+miner scan --organization example-org -O data/raw/results.json --packs-root C:\path\to\codeql-repo
 ```
 
 **Opción B — Packs del registry:**
 
 Descarga los packs que necesites directamente con la CLI de CodeQL. `codeql pack download` contacta por su cuenta el registry de paquetes de CodeQL usando la autenticación que tenga configurada la CLI de CodeQL — **no** lee `GITHUB_TOKEN` y no necesita ningún scope `read:packages`:
 
-```powershell
+```bash
 codeql pack download codeql/python-security-extended
 codeql pack download codeql/java-security-extended
 codeql pack download codeql/javascript-security-extended
@@ -207,46 +211,46 @@ La CLI tiene tres comandos:
 
 ### Escanear toda una organización
 
-```powershell
-miner scan --organization <org-name> -O results.json
+```bash
+miner scan --organization <org-name> -O data/raw/results.json
 ```
 
 Escaneá solo un conjunto limitado — por ejemplo los **30 repositorios con más estrellas** (los repos se ordenan descendente según el criterio elegido; cuando solo se pasa `--limit`, el orden por defecto es por estrellas):
 
-```powershell
-miner scan --organization <org-name> -O results.json --limit 30 --sort-by stars
+```bash
+miner scan --organization <org-name> -O data/raw/results.json --limit 30 --sort-by stars
 ```
 
 Criterios disponibles para `--sort-by`: `stars`, `forks`, `issues`, `size`, `pushed`, `updated`, `created`, `name` (A→Z).
 
 ### Escanear un solo repositorio
 
-```powershell
-miner scan --repo <org>/<repo> -O results.json
+```bash
+miner scan --repo <org>/<repo> -O data/raw/results.json
 ```
 
 ### Generar solo SBOMs (reutilizar repositorios clonados)
 
 `miner sbom` ejecuta Syft sobre repositorios que **ya están clonados** en un directorio de trabajo, sin repetir el análisis de CodeQL. Escribe un archivo CycloneDX JSON por repositorio más un reporte JSON general:
 
-```powershell
-miner sbom --organization <org-name> --workdir repos --output-dir sbom-output
+```bash
+miner sbom --organization <org-name> --workdir data/raw/repos --output-dir data/raw/sbom-output
 ```
 
 Para reutilizar los clones producidos por `miner scan`, ejecuta `scan` con un `--workdir` persistente (los clones se conservan ahí y no se borran después del scan). Luego:
 
-```powershell
+```bash
 # 1) Scan + CodeQL + SBOMs; los clones se guardan en ./repos
-miner scan --organization <org-name> --workdir repos -O results.json
+miner scan --organization <org-name> --workdir data/raw/repos -O data/raw/results.json
 
 # 2) Después, regenerar solo los SBOM reutilizando los clones
-miner sbom --organization <org-name> --workdir repos --output-dir sbom-output
+miner sbom --organization <org-name> --workdir data/raw/repos --output-dir data/raw/sbom-output
 ```
 
 También se puede procesar un solo repositorio con `--repo`:
 
-```powershell
-miner sbom --repo OWASP/NodeGoat --workdir repos --output-dir sbom-output
+```bash
+miner sbom --repo OWASP/NodeGoat --workdir data/raw/repos --output-dir data/raw/sbom-output
 ```
 
 Los repositorios que no fueron clonados (no existen en `--workdir`) se reportan con estado `failed` ("Repository not cloned ...") y el proceso continúa con el resto.
@@ -257,17 +261,17 @@ Los repositorios que no fueron clonados (no existen en `--workdir`) se reportan 
 
 `miner grype` toma los SBOM CycloneDX producidos por `miner sbom` (o `miner scan`) y compara sus componentes con la base de datos de vulnerabilidades de Grype. No clona ni ejecuta CodeQL, por lo que es con diferencia el comando más barato de re-ejecutar.
 
-```powershell
+```bash
 # 1) Generar los SBOM
-miner sbom --organization <org-name> --workdir repos --output-dir sbom-output
+miner sbom --organization <org-name> --workdir data/raw/repos --output-dir data/raw/sbom-output
 
 # 2) Escanearlos en busca de vulnerabilidades conocidas
 miner grype --organization <org-name>
 ```
 
-Esto escribe un reporte JSON de Grype por repositorio más un reporte agregado `grype-output/grype-report.json`:
+Esto escribe un reporte JSON de Grype por repositorio más un reporte agregado `data/raw/grype/grype-report.json`:
 
-```powershell
+```bash
 miner grype --organization <org-name> --limit 30 --sort-by stars
 ```
 
@@ -275,7 +279,7 @@ miner grype --organization <org-name> --limit 30 --sort-by stars
 
 También se puede procesar un solo repositorio con `--repo`:
 
-```powershell
+```bash
 miner grype --repo mozilla/send
 ```
 
@@ -290,7 +294,7 @@ Cada repositorio termina con uno de cuatro estados:
 
 Los SBOM ausentes se reportan como `skipped` en lugar de `failed`, por lo que apuntar el comando a un directorio parcialmente poblado no es un error. El comando termina con código distinto de cero solo cuando **todos** los repositorios escaneados fallaron.
 
-> **Nota:** `--sbom-dir` tiene como valor por defecto `sbom-output/sboms`, que es donde escribe `miner sbom`. Para consumir los SBOM producidos por `miner scan`, usa `--sbom-dir sboms`.
+> **Nota:** miner scan y miner sbom escriben los SBOMs en data/raw/sbom-output/sboms, que es el valor por defecto de --sbom-dir en miner grype
 
 > **Los conteos son de coincidencias, no de CVEs distintos.** Una única biblioteca vulnerable requerida por tres paquetes de un repositorio se cuenta tres veces.
 
@@ -300,13 +304,25 @@ Los SBOM ausentes se reportan como `skipped` en lugar de `failed`, por lo que ap
 |--------|-------|-------------|-------------------|
 | `--organization` | `-o` | Nombre de la organización de GitHub | - |
 | `--repo` | `-r` | Repositorio único a escanear (ej. `OWASP/NodeGoat`) | - |
-| `--output` | `-O` | Ruta del archivo JSON de salida | `results.json` |
+| `--output` | `-O` | Ruta del archivo JSON de salida | `data/raw/results.json` |
 | `--workdir` | `-w` | Directorio de trabajo para clones y bases de datos. Los clones se **conservan** cuando se indica, se borran si se omite (temp dir) | Directorio temporal del sistema |
 | `--packs-root` | `-p` | Ruta a los query packs locales de CodeQL | Auto-detectada |
 | `--fetch-packs/--no-fetch-packs` | | Auto-clonar `github/codeql` cuando no se encuentran packs locales | Activado |
-| `--sbom-dir` | | Directorio donde se escriben los SBOM por repositorio | `sboms` |
+| `--sbom-dir` | | Directorio donde se escriben los SBOM por repositorio | `data/raw/sbom-output/sboms` |
 | `--limit` | `-n` | Procesar como máximo esta cantidad de repositorios (ej. `--limit 30`) | Todos |
 | `--sort-by` | | Criterio para elegir repositorios: `stars`, `forks`, `issues`, `size`, `pushed`, `updated`, `created`, `name` | `stars` (solo cuando se usa `--limit`) |
+
+### Dataset unificado
+
+Integra los hallazgos de CodeQL y Grype en una sola tabla (una fila por hallazgo):
+
+```bash
+python -m miner.dataset_builder --grype data/raw/grype/grype-report.json
+```
+
+Genera `data/processed/dataset.csv` y `data/processed/dataset.json` con las columnas
+`source`, `repository`, `vulnerability_id`, `title`, `severity`, `location`, `start_line`,
+`package`, `package_version` y `fix_versions`.
 
 ### Opciones — `miner sbom`
 
@@ -314,8 +330,8 @@ Los SBOM ausentes se reportan como `skipped` en lugar de `failed`, por lo que ap
 |--------|-------|-------------|-------------------|
 | `--organization` | `-o` | Nombre de la organización de GitHub | - |
 | `--repo` | `-r` | Repositorio único (ej. `OWASP/NodeGoat`) | - |
-| `--workdir` | `-w` | Directorio que contiene los repositorios ya clonados | `repos` |
-| `--output-dir` | `-O` | Directorio de salida para los archivos SBOM y el reporte | `sbom-output` |
+| `--workdir` | `-w` | Directorio que contiene los repositorios ya clonados | `data/raw/repos` |
+| `--output-dir` | `-O` | Directorio de salida para los archivos SBOM y el reporte | `data/raw/sbom-output` |
 | `--limit` | `-n` | Procesar como máximo esta cantidad de repositorios (ej. `--limit 30`) | Todos |
 | `--sort-by` | | Criterio para elegir repositorios: `stars`, `forks`, `issues`, `size`, `pushed`, `updated`, `created`, `name` | `stars` (solo cuando se usa `--limit`) |
 
@@ -325,8 +341,8 @@ Los SBOM ausentes se reportan como `skipped` en lugar de `failed`, por lo que ap
 |--------|-------|-------------|-------------------|
 | `--organization` | `-o` | Nombre de la organización de GitHub | - |
 | `--repo` | `-r` | Repositorio único (ej. `mozilla/send`) | - |
-| `--sbom-dir` | | Directorio que contiene los archivos SBOM CycloneDX | `sbom-output/sboms` |
-| `--output-dir` | `-O` | Directorio de salida para los reportes de Grype y el reporte agregado | `grype-output` |
+| `--sbom-dir` | | Directorio que contiene los archivos SBOM CycloneDX | `data/raw/sbom-output/sboms` |
+| `--output-dir` | `-O` | Directorio de salida para los reportes de Grype y el reporte agregado | `data/raw/grype` |
 | `--limit` | `-n` | Procesar como máximo esta cantidad de repositorios (ej. `--limit 30`) | Todos |
 | `--sort-by` | | Criterio para elegir repositorios: `stars`, `forks`, `issues`, `size`, `pushed`, `updated`, `created`, `name` | `stars` (solo cuando se usa `--limit`) |
 
@@ -334,29 +350,29 @@ Los SBOM ausentes se reportan como `skipped` en lugar de `failed`, por lo que ap
 
 ### Ejemplos
 
-```powershell
+```bash
 # (1) Escanear todos los repos de una organización (CodeQL + SBOMs)
-miner scan --organization pallets -O results.json
+miner scan --organization pallets -O data/raw/results.json
 
 # (2) Escanear un solo repositorio
 miner scan --repo OWASP/NodeGoat -O nodegoat.json
 
 # (3) Repo único con organización explícita, conservando los clones para reutilizarlos después
-miner scan --organization OWASP --repo NodeGoat -O nodegoat.json -w repos --sbom-dir sboms
+miner scan --organization OWASP --repo NodeGoat -O nodegoat.json -w data/raw/repos --sbom-dir data/raw/sbom-output/sboms
 
 # (4) Generación de SBOMs solamente, reutilizando los clones de (3)
-miner sbom --organization OWASP --repo NodeGoat --workdir repos --output-dir sbom-output
+miner sbom --organization OWASP --repo NodeGoat --workdir data/raw/repos --output-dir data/raw/sbom-output
 
 # (5) Generación de SBOMs solamente para toda una organización, reutilizando clones existentes
-miner sbom --organization pallets --workdir repos --output-dir sbom-output
+miner sbom --organization pallets --workdir data/raw/repos --output-dir data/raw/sbom-output
 
 # (6) Con un directorio de trabajo y packs root específicos
-miner scan --organization expressjs -O results.json -w C:\work\miner-temp --packs-root C:\codeql-repo
+miner scan --organization expressjs -O data/raw/results.json -w C:\work\miner-temp --packs-root C:\codeql-repo
 ```
 
 > **Rutas de Windows con espacios:** Encierra entre comillas las rutas que contengan espacios:
 > ```powershell
-> miner scan --organization pallets -O results.json -w "C:\Users\John Doe\work"
+> miner scan --organization pallets -O data/raw/results.json -w "C:\Users\John Doe\work"
 > ```
 
 La herramienta mostrará el progreso en la terminal, indicando qué repositorio se está procesando y su estado de análisis.
@@ -366,20 +382,20 @@ La herramienta mostrará el progreso en la terminal, indicando qué repositorio 
 **Scan de organización (`miner scan`):**
 ```
 Using CodeQL packs from: C:\Users\you\codeql-repo
-SBOMs will be written to: sboms
+SBOMs will be written to: data/raw/sbom-output/sboms
 Found 17 repositories.
   flask: analyzed
   flask-sqlalchemy: analyzed
   jinja: analyzed
   click: analyzed
   ...
-Results written to results.json
+Results written to data/raw/results.json
 ```
 
 **Scan de un solo repositorio:**
 ```
 Using CodeQL packs from: C:\Users\you\codeql-repo
-SBOMs will be written to: sboms
+SBOMs will be written to: data/raw/sbom-output/sboms
 Scanning single repository: OWASP/NodeGoat
   NodeGoat: analyzed
 Results written to nodegoat.json
@@ -389,14 +405,14 @@ Results written to nodegoat.json
 ```
 Generating SBOM for repository: OWASP/NodeGoat
   OWASP/NodeGoat: success
-SBOM report written to sbom-output\sbom-report.json
+SBOM report written to data/raw/sbom-output\sbom-report.json
 ```
 
 ## Formato de salida
 
 ### Resultados del scan (`miner scan`)
 
-El JSON de salida (`-O results.json`) contiene:
+El JSON de salida (`-O data/raw/results.json`) contiene:
 
 - **organization**: El nombre de la organización analizada
 - **summary**: Estadísticas agregadas (total de repos, analizados, fallidos, cantidad de findings)
@@ -469,7 +485,7 @@ Los repositorios se ordenan alfabéticamente. Los findings dentro de cada reposi
 Cada repositorio con un clon funcional obtiene su propio archivo CycloneDX JSON independiente:
 
 ```
-sbom-output/
+data/raw/sbom-output/
 ├── sbom-report.json            # Reporte SBOM general (agregado)
 └── sboms/
     ├── NodeGoat.cdx.json       # SBOM en CycloneDX JSON, uno por repositorio
@@ -501,7 +517,7 @@ sbom-output/
       "syft_version": "1.51.0",
       "status": "success",
       "components": 419,
-      "sbom_path": "C:\\Users\\you\\sbom-output\\sboms\\NodeGoat.cdx.json",
+      "sbom_path": "C:\\Users\\you\\data/raw/sbom-output\\sboms\\NodeGoat.cdx.json",
       "error_message": null
     }
   ]
@@ -520,14 +536,14 @@ sbom-output/
 
 ## Ejemplo de uso completo
 
-```powershell
+```bash
 # 1. Verificar los requisitos previos
 syft version          # ej. 1.51.0
 codeql version        # ej. 2.26.4
 git version
 
 # 2. Escanear una organización: CodeQL + SBOMs, clones conservados en ./repos
-miner scan --organization OWASP --repo NodeGoat -w repos -O nodegoat.json --sbom-dir sboms
+miner scan --organization OWASP --repo NodeGoat -w data/raw/repos -O nodegoat.json --sbom-dir data/raw/data/raw/sbom-output/sboms
 
 # 3. Inspeccionar las salidas
 #    - nodegoat.json                 : findings de CodeQL + metadatos del SBOM
@@ -535,11 +551,11 @@ miner scan --organization OWASP --repo NodeGoat -w repos -O nodegoat.json --sbom
 #    - (buscar "components" para ver la cantidad de componentes)
 
 # 4. Después, regenerar solo los SBOM — sin CodeQL, reutilizando ./repos
-miner sbom --organization OWASP --repo NodeGoat --workdir repos --output-dir sbom-output
+miner sbom --organization OWASP --repo NodeGoat --workdir data/raw/repos --output-dir data/raw/sbom-output
 
 # 5. Inspeccionar el reporte de SBOMs
-#    - sbom-output\sbom-report.json  : reporte agregado (commit, versión de syft, estado, cantidad, ruta)
-#    - sbom-output\sboms\NodeGoat.cdx.json : el nuevo SBOM en CycloneDX JSON
+#    - data/raw/sbom-output\sbom-report.json  : reporte agregado (commit, versión de syft, estado, cantidad, ruta)
+#    - data/raw/sbom-output\sboms\NodeGoat.cdx.json : el nuevo SBOM en CycloneDX JSON
 ```
 
 ## Notas de verificación (diferencias observadas)
@@ -574,11 +590,11 @@ Instalar solo las dependencias (`pip install -e ".[dev]"`) **no alcanza**. El mi
 5. `grype version` funciona desde tu terminal (solo si quieres escaneo de vulnerabilidades).
 6. `git version` funciona desde tu terminal.
 
-Si todo esto se cumple, `miner scan --organization <org-name> -O results.json` o `miner scan --repo <org>/<repo> -O results.json` deberían producir un reporte JSON válido, y `miner sbom --organization <org-name> --workdir repos --output-dir sbom-output` debería producir el reporte de SBOM.
+Si todo esto se cumple, `miner scan --organization <org-name> -O data/raw/results.json` o `miner scan --repo <org>/<repo> -O data/raw/results.json` deberían producir un reporte JSON válido, y `miner sbom --organization <org-name> --workdir data/raw/repos --output-dir data/raw/sbom-output` debería producir el reporte de SBOM.
 
 ## Ejecutar tests
 
-```powershell
+```bash
 pytest
 ```
 

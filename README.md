@@ -1,79 +1,118 @@
 # Proyecto P1 - Ciberseguridad (ICC610)
 
-Miner de vulnerabilidades para organizaciones de GitHub. Usa CodeQL para el
-analisis de seguridad y Syft para la generacion de SBOM (CycloneDX).
+Herramienta para detectar, analizar y visualizar vulnerabilidades en los repositorios
+públicos de una organización de GitHub, y para auditar la seguridad de este mismo
+repositorio con apoyo de un modelo de lenguaje.
+
+## Componentes
+
+| Componente | Carpeta | Función |
+|---|---|---|
+| **Miner** | `src/miner/` | Clona repos, ejecuta CodeQL, Syft y Grype, y construye el dataset |
+| **Analyzer** | `src/analyzer/` | Notebooks que analizan el dataset |
+| **Visualizer** | `src/visualizer/` | Interfaz para explorar los resultados |
+| **Reporter** | `src/reporter/` | Audita este repositorio con un LLM y genera un reporte en Markdown |
+
+Flujo principal: `Miner → Analyzer → Visualizer`. El Reporter es independiente: no usa
+datos del Miner ni del Analyzer, solo analiza este repositorio.
 
 ## Estructura
 
 ```
 .
-├── analyzer/          # CodeQL (codeql.py), Grype (grype.py) y parseo de SARIF (sarif.py)
-├── data/              # Datos de entrada/salida generados
-├── docs/              # Documentacion (README completo en espanol e ingles)
-├── miner/             # Orquestacion: CLI, API de GitHub y operaciones git
-├── reporter/          # Modelos de datos y generacion de SBOM
-├── tests/             # Pruebas unitarias
-└── visualizer/        # Visualizacion de resultados
+├── .devcontainer/    # Dev Container (Python, Node, CodeQL, Syft, Grype)
+├── .github/          # Workflows
+├── data/
+│   ├── raw/          # Clones, SARIF, SBOM y reportes de Grype (no se versiona)
+│   └── processed/    # Dataset unificado (CSV/JSON)
+├── docs/             # Documentación detallada y decisiones de diseño
+├── reports/          # Salida del Reporter
+├── src/
+│   ├── miner/        # CLI, clonado, runners de CodeQL/Syft/Grype, dataset_builder
+│   ├── analyzer/     # notebooks/ y utils/
+│   ├── visualizer/   # app/
+│   └── reporter/     # inspector, cliente LLM y generador de Markdown
+├── tests/
+├── .env.example
+└── pyproject.toml
 ```
 
-## Documentacion
+## Instalación
 
-La documentacion completa, con instalacion, uso y formato de salida, esta en:
+### Opción recomendada: Dev Container
 
-- [`docs/README.es.md`](docs/README.es.md) - Espanol
-- [`docs/README.md`](docs/README.md) - English
+Requiere Docker y VS Code con la extensión *Dev Containers*.
 
-## Instalacion
+1. Clona el repositorio y ábrelo en VS Code.
+2. Define tus credenciales **en tu máquina**, antes de abrir VS Code
+   (por ejemplo en `~/.bashrc`):
+```bash
+   export GITHUB_TOKEN=...      # opcional, eleva el límite de la API de GitHub
+   export LLM_API_KEY=...       # necesario para el Reporter
+```
+3. `Ctrl+Shift+P` → **Dev Containers: Reopen in Container**.
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\activate
+El contenedor incluye Python, Node, CodeQL, Syft y Grype con versiones fijas.
+
+### Sin Dev Container
+
+Necesitas Python 3.10+, Git, CodeQL CLI, Syft y Grype en el `PATH`.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-## Requisitos externos
+## Configuración
 
-Ademas de las dependencias de Python, la herramienta orquesta tres binarios
-externos que deben estar en el `PATH`:
-
-- [CodeQL CLI](https://codeql.github.com/docs/codeql-cli/)
-- [Syft](https://github.com/anchore/syft) (opcional, solo para SBOM)
-- [Grype](https://github.com/anchore/grype) (opcional, solo para escaneo de vulnerabilidades)
-
-## Configuracion
-
-Crear un archivo `.env` en la raiz del proyecto (no se versiona):
+Los secretos nunca se guardan en el repositorio. Copia `.env.example` a `.env`
+(ignorado por Git) o usa variables de entorno:
 
 ```
-GITHUB_TOKEN=ghp_your_token_here
+GITHUB_TOKEN=
+LLM_API_KEY=
 ```
-
-Ver `.env.example`.
 
 ## Uso
 
-```powershell
-# Escanear una organizacion completa (CodeQL + SBOM)
-miner scan --organization <org> -O results.json
+### Miner
+
+```bash
+# Escanear una organización (CodeQL + SBOM)
+miner scan --organization <org> --limit 30 --sort-by stars
 
 # Escanear un solo repositorio
-miner scan --repo OWASP/NodeGoat -O nodegoat.json
+miner scan --repo OWASP/NodeGoat
 
 # Solo SBOM, reutilizando clones existentes
-miner sbom --organization <org> --workdir repos --output-dir sbom-output
+miner sbom --organization <org>
 
-# Escanear los SBOM existentes en busca de vulnerabilidades conocidas
+# Vulnerabilidades de dependencias con Grype
 miner grype --organization <org>
+
+# Dataset unificado en data/processed/
+python -m miner.dataset_builder --grype data/raw/grype/grype-report.json
 ```
+
+Todas las opciones están en [`docs/README.es.md`](docs/README.es.md).
+
+### Reporter
+
+```bash
+python -m reporter.cli     # genera reports/security_audit_report.md
+```
+
+*(En desarrollo.)*
 
 ## Pruebas
 
-```powershell
+```bash
 pytest
 ```
 
-## Nota sobre datos generados
+## Documentación
 
-Los resultados de escaneo (`results.json`, `nodegoat.json`, SBOMs y logs) son
-salidas generadas y estan excluidas del control de versiones. Para generarlas,
-ver la seccion de uso en `docs/`.
+- [`docs/README.es.md`](docs/README.es.md) - Miner en español
+- [`docs/README.md`](docs/README.md) - Miner in English
+- [`docs/design-decisions.md`](docs/design-decisions.md) - Decisiones de diseño
