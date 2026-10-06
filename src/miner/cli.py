@@ -112,7 +112,7 @@ def scan(
     output: str = typer.Option("data/raw/results.json", "--output", "-O", help="Output JSON file path"),
     workdir: str = typer.Option(None, "--workdir", "-w", help="Working directory for clones and databases"),
     packs_root: str = typer.Option(None, "--packs-root", "-p", help="Path to CodeQL query packs (codeql-repo). Detected automatically if omitted."),
-    sbom_dir: str = typer.Option("data/raw/sboms", "--sbom-dir", help="Output directory for SBOM (CycloneDX JSON) files"),
+    sbom_dir: str = typer.Option("data/raw/sbom-output/sboms", "--sbom-dir", help="Output directory for SBOM (CycloneDX JSON) files"),
     fetch_packs: bool = typer.Option(
         True,
         "--fetch-packs/--no-fetch-packs",
@@ -235,7 +235,7 @@ def sbom(
     organization: str = typer.Option(None, "--organization", "-o", help="GitHub organization name"),
     repo: str = typer.Option(None, "--repo", "-r", help="Single repository (e.g. OWASP/NodeGoat or just NodeGoat with -o)"),
     workdir: str = typer.Option("data/raw/repos", "--workdir", "-w", help="Directory containing already-cloned repositories"),
-    output_dir: str = typer.Option("data/raw/sboms", "--output-dir", "-O", help="Output directory for SBOM files and report"),
+    output_dir: str = typer.Option("data/raw/sbom-output", "--output-dir", "-O", help="Output directory for SBOM files and report"),
     limit: int = typer.Option(None, "--limit", "-n", min=1, help="Process at most this many repositories (e.g. --limit 30 for the top 30)"),
     sort_by: str = typer.Option(None, "--sort-by", help="Criterion to pick repositories: stars, forks, issues, size, pushed, updated, created, name (e.g. --limit 30 --sort-by stars)"),
 ) -> None:
@@ -348,7 +348,7 @@ def grype(
     organization: str = typer.Option(None, "--organization", "-o", help="GitHub organization name"),
     repo: str = typer.Option(None, "--repo", "-r", help="Single repository (e.g. OWASP/NodeGoat or just NodeGoat with -o)"),
     sbom_dir: str = typer.Option(
-        "sbom-output/sboms",
+        "data/raw/sbom-output/sboms",
         "--sbom-dir",
         help="Directory containing CycloneDX SBOM files. Defaults to the output of 'miner sbom'; use 'sboms' to read the output of 'miner scan'.",
     ),
