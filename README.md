@@ -97,6 +97,18 @@ python -m miner.dataset_builder --grype data/raw/grype/grype-report.json
 
 Todas las opciones están en [`docs/README.es.md`](docs/README.es.md).
 
+
+### Analyzer
+
+```bash
+python -m miner.dataset_builder
+jupyter nbconvert --to notebook --execute --inplace \
+  src/analyzer/notebooks/01_analisis_pallets_eco.ipynb
+```
+
+Las tablas resultantes quedan en `data/processed/analysis/`.
+
+
 ### Reporter
 
 ```bash
