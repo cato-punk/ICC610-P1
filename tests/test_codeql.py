@@ -7,7 +7,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from analyzer.codeql import (
+from miner.codeql_runner import (
     DEFAULT_PACKS_URL,
     LANGUAGE_SUITES,
     _is_packs_root,
@@ -89,7 +89,7 @@ class TestFetchPacksRoot:
             ran.append(cmd)
             return MagicMock(returncode=0, stdout="", stderr="")
 
-        monkeypatch.setattr("analyzer.codeql._run", fake_run)
+        monkeypatch.setattr("miner.codeql_runner._run", fake_run)
         assert fetch_packs_root(root) == root
         assert ran == []
 
@@ -101,7 +101,7 @@ class TestFetchPacksRoot:
             run_cmds.append(cmd)
             return MagicMock(returncode=0, stdout="", stderr="")
 
-        monkeypatch.setattr("analyzer.codeql._run", fake_run)
+        monkeypatch.setattr("miner.codeql_runner._run", fake_run)
         result = fetch_packs_root(dest)
 
         assert result == dest
@@ -115,13 +115,13 @@ class TestFetchPacksRoot:
         assert str(dest) in cmd
 
     def test_default_destination_is_cybersec(self, tmp_path: Path, monkeypatch):
-        monkeypatch.setattr("analyzer.codeql.Path.home", lambda: tmp_path)
+        monkeypatch.setattr("miner.codeql_runner.Path.home", lambda: tmp_path)
         dest = tmp_path / "cybersec" / "codeql-repo"
 
         def fake_run(cmd: list[str], check: bool = True) -> MagicMock:
             return MagicMock(returncode=0, stdout="", stderr="")
 
-        monkeypatch.setattr("analyzer.codeql._run", fake_run)
+        monkeypatch.setattr("miner.codeql_runner._run", fake_run)
         assert fetch_packs_root() == dest
 
     def test_raises_when_destination_exists_but_invalid(self, tmp_path: Path):
@@ -140,6 +140,6 @@ class TestFetchPacksRoot:
                 raise RuntimeError(result.stderr)
             return result
 
-        monkeypatch.setattr("analyzer.codeql._run", fake_run)
+        monkeypatch.setattr("miner.codeql_runner._run", fake_run)
         with pytest.raises(RuntimeError):
             fetch_packs_root(dest)

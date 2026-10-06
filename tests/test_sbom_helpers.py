@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from miner.cli import _build_sbom_result
-from reporter.models import SbomStatus
+from miner.models import SbomStatus
 
 
 def _init_repo(repo_dir: Path) -> None:

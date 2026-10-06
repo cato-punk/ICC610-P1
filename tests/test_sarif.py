@@ -4,7 +4,7 @@ import json
 import tempfile
 from pathlib import Path
 
-from analyzer.sarif import parse_sarif
+from miner.sarif_parser import parse_sarif
 
 
 def _write_sarif(tmp: Path, data: dict) -> Path:

@@ -86,7 +86,7 @@ class TestAnalyzeRepoResilience:
 
     def test_analyzed_when_one_language_fails(self, tmp_path, monkeypatch):
         from miner.cli import _analyze_repo
-        from reporter.models import Finding, RepoStatus
+        from miner.models import Finding, RepoStatus
 
         def fake_langs(url):
             return ["JavaScript", "Swift"]
@@ -132,7 +132,7 @@ class TestAnalyzeRepoResilience:
 
     def test_database_failed_when_all_fail(self, tmp_path, monkeypatch):
         from miner.cli import _analyze_repo
-        from reporter.models import RepoStatus
+        from miner.models import RepoStatus
 
         def fake_langs(url):
             return ["Swift"]
@@ -158,7 +158,7 @@ class TestAnalyzeRepoResilience:
 
     def test_analysis_failed_when_all_analyses_fail(self, tmp_path, monkeypatch):
         from miner.cli import _analyze_repo
-        from reporter.models import RepoStatus
+        from miner.models import RepoStatus
 
         def fake_langs(url):
             return ["JavaScript"]
@@ -188,7 +188,7 @@ class TestAnalyzeRepoResilience:
 
     def test_cpp_maps_to_codeql_language(self, tmp_path, monkeypatch):
         from miner.cli import _analyze_repo
-        from reporter.models import RepoStatus
+        from miner.models import RepoStatus
 
         tried: list[str] = []
 
@@ -226,7 +226,7 @@ class TestBuildGrypeResult:
 
     def test_missing_sbom_is_skipped_not_failed(self, tmp_path):
         from miner.cli import _build_grype_result
-        from reporter.models import GrypeStatus
+        from miner.models import GrypeStatus
 
         result = _build_grype_result(
             "mozilla", "send", tmp_path / "absent.cdx.json", tmp_path / "send.json", "0.120.0",
@@ -238,7 +238,7 @@ class TestBuildGrypeResult:
 
     def test_vulnerabilities_found_is_success(self, tmp_path, monkeypatch):
         from miner.cli import _build_grype_result
-        from reporter.models import GrypeStatus
+        from miner.models import GrypeStatus
 
         monkeypatch.setattr("miner.cli.scan_sbom", lambda s, o: o)
         monkeypatch.setattr("miner.cli.count_vulnerabilities", lambda p: 3)
@@ -257,7 +257,7 @@ class TestBuildGrypeResult:
 
     def test_clean_scan_is_no_vulnerabilities(self, tmp_path, monkeypatch):
         from miner.cli import _build_grype_result
-        from reporter.models import GrypeStatus
+        from miner.models import GrypeStatus
 
         monkeypatch.setattr("miner.cli.scan_sbom", lambda s, o: o)
         monkeypatch.setattr("miner.cli.count_vulnerabilities", lambda p: 0)
@@ -274,7 +274,7 @@ class TestBuildGrypeResult:
 
     def test_scan_exception_is_recorded_not_raised(self, tmp_path, monkeypatch):
         from miner.cli import _build_grype_result
-        from reporter.models import GrypeStatus
+        from miner.models import GrypeStatus
 
         def boom(sbom, out):
             raise RuntimeError("grype crashed")

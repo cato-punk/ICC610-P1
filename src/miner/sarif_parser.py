@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from reporter.models import Finding
+from miner.models import Finding
 
 
 def parse_sarif(sarif_path: Path) -> list[Finding]:

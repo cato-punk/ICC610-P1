@@ -12,16 +12,16 @@ import typer
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from analyzer.codeql import create_database, detect_packs_root, fetch_packs_root, run_analysis
-from analyzer.grype import (
+from miner.codeql_runner import create_database, detect_packs_root, fetch_packs_root, run_analysis
+from miner.grype_runner import (
     SEVERITIES,
     count_vulnerabilities,
     get_grype_version,
     scan_sbom,
     severity_counts,
 )
-from analyzer.sarif import parse_sarif
-from reporter.models import (
+from miner.sarif_parser import parse_sarif
+from miner.models import (
     AnalysisSummary,
     GrypeReport,
     GrypeResult,
@@ -35,10 +35,10 @@ from reporter.models import (
     SbomStatus,
     SbomSummary,
 )
-from reporter.syft import count_components, generate_sbom, get_repo_commit, get_syft_version
+from miner.syft_runner import count_components, generate_sbom, get_repo_commit, get_syft_version
 
 from .github import fetch_languages, fetch_repos
-from .git_ops import cleanup, clone_repo
+from .git_cloner import cleanup, clone_repo
 
 app = typer.Typer()
 console = Console()
@@ -109,10 +109,10 @@ def _apply_sort_limit(repos, limit: int | None, sort_by: str | None):
 def scan(
     organization: str = typer.Option(None, "--organization", "-o", help="GitHub organization name"),
     repo: str = typer.Option(None, "--repo", "-r", help="Single repository to scan (e.g. OWASP/NodeGoat or just NodeGoat with -o)"),
-    output: str = typer.Option("results.json", "--output", "-O", help="Output JSON file path"),
+    output: str = typer.Option("data/raw/results.json", "--output", "-O", help="Output JSON file path"),
     workdir: str = typer.Option(None, "--workdir", "-w", help="Working directory for clones and databases"),
     packs_root: str = typer.Option(None, "--packs-root", "-p", help="Path to CodeQL query packs (codeql-repo). Detected automatically if omitted."),
-    sbom_dir: str = typer.Option("sboms", "--sbom-dir", help="Output directory for SBOM (CycloneDX JSON) files"),
+    sbom_dir: str = typer.Option("data/raw/sboms", "--sbom-dir", help="Output directory for SBOM (CycloneDX JSON) files"),
     fetch_packs: bool = typer.Option(
         True,
         "--fetch-packs/--no-fetch-packs",
@@ -234,8 +234,8 @@ def scan(
 def sbom(
     organization: str = typer.Option(None, "--organization", "-o", help="GitHub organization name"),
     repo: str = typer.Option(None, "--repo", "-r", help="Single repository (e.g. OWASP/NodeGoat or just NodeGoat with -o)"),
-    workdir: str = typer.Option("repos", "--workdir", "-w", help="Directory containing already-cloned repositories"),
-    output_dir: str = typer.Option("sbom-output", "--output-dir", "-O", help="Output directory for SBOM files and report"),
+    workdir: str = typer.Option("data/raw/repos", "--workdir", "-w", help="Directory containing already-cloned repositories"),
+    output_dir: str = typer.Option("data/raw/sboms", "--output-dir", "-O", help="Output directory for SBOM files and report"),
     limit: int = typer.Option(None, "--limit", "-n", min=1, help="Process at most this many repositories (e.g. --limit 30 for the top 30)"),
     sort_by: str = typer.Option(None, "--sort-by", help="Criterion to pick repositories: stars, forks, issues, size, pushed, updated, created, name (e.g. --limit 30 --sort-by stars)"),
 ) -> None:
@@ -352,7 +352,7 @@ def grype(
         "--sbom-dir",
         help="Directory containing CycloneDX SBOM files. Defaults to the output of 'miner sbom'; use 'sboms' to read the output of 'miner scan'.",
     ),
-    output_dir: str = typer.Option("grype-output", "--output-dir", "-O", help="Output directory for Grype reports"),
+    output_dir: str = typer.Option("data/raw/grype", "--output-dir", "-O", help="Output directory for Grype reports"),
     limit: int = typer.Option(None, "--limit", "-n", min=1, help="Process at most this many repositories (e.g. --limit 30 for the top 30)"),
     sort_by: str = typer.Option(None, "--sort-by", help="Criterion to pick repositories: stars, forks, issues, size, pushed, updated, created, name (e.g. --limit 30 --sort-by stars)"),
 ) -> None:

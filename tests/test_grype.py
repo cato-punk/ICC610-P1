@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from analyzer.grype import (
+from miner.grype_runner import (
     SEVERITIES,
     count_vulnerabilities,
     get_grype_version,
@@ -41,18 +41,18 @@ def _match(severity: str, name: str = "flask") -> dict:
 
 
 class TestGetGrypeVersion:
-    @patch("analyzer.grype.subprocess.run")
+    @patch("miner.grype_runner.subprocess.run")
     def test_parses_version_line(self, mock_run):
         mock_run.return_value = _mock_process(stdout=SAMPLE_VERSION_OUTPUT)
         assert get_grype_version() == "0.120.0"
 
-    @patch("analyzer.grype.subprocess.run")
+    @patch("miner.grype_runner.subprocess.run")
     def test_version_line_wins_over_syft_version_line(self, mock_run):
         """`grype version` also prints a 'Syft Version:' line; take the first."""
         mock_run.return_value = _mock_process(stdout=SAMPLE_VERSION_OUTPUT)
         assert get_grype_version() != "v1.54.0"
 
-    @patch("analyzer.grype.subprocess.run")
+    @patch("miner.grype_runner.subprocess.run")
     def test_falls_back_to_json(self, mock_run):
         mock_run.side_effect = [
             _mock_process(stdout="no structured version here"),
@@ -60,7 +60,7 @@ class TestGetGrypeVersion:
         ]
         assert get_grype_version() == "0.99.0"
 
-    @patch("analyzer.grype.subprocess.run")
+    @patch("miner.grype_runner.subprocess.run")
     def test_json_fallback_uses_dash_o_flag(self, mock_run):
         """Grype uses `-o json`; syft's `--format json` exits non-zero."""
         mock_run.side_effect = [
@@ -70,7 +70,7 @@ class TestGetGrypeVersion:
         get_grype_version()
         assert mock_run.call_args_list[1][0][0][-2:] == ["-o", "json"]
 
-    @patch("analyzer.grype.subprocess.run")
+    @patch("miner.grype_runner.subprocess.run")
     def test_falls_back_to_first_line(self, mock_run):
         mock_run.side_effect = [
             _mock_process(stdout="grype-raw-string"),
@@ -78,7 +78,7 @@ class TestGetGrypeVersion:
         ]
         assert get_grype_version() == "grype-raw-string"
 
-    @patch("analyzer.grype.subprocess.run")
+    @patch("miner.grype_runner.subprocess.run")
     def test_raises_on_failure(self, mock_run):
         mock_run.return_value = _mock_process(returncode=1, stderr="grype: not found")
         with pytest.raises(RuntimeError):
@@ -86,7 +86,7 @@ class TestGetGrypeVersion:
 
 
 class TestScanSbom:
-    @patch("analyzer.grype.subprocess.run")
+    @patch("miner.grype_runner.subprocess.run")
     def test_builds_sbom_command(self, mock_run, tmp_path: Path):
         mock_run.return_value = _mock_process(stdout='{"matches": []}')
         sbom = tmp_path / "repo.cdx.json"
@@ -104,7 +104,7 @@ class TestScanSbom:
         assert cmd[1] == f"sbom:{sbom}"
         assert cmd[2:] == ["-o", "json"]
 
-    @patch("analyzer.grype.subprocess.run")
+    @patch("miner.grype_runner.subprocess.run")
     def test_raises_on_nonzero_exit(self, mock_run, tmp_path: Path):
         mock_run.return_value = _mock_process(returncode=1, stderr="unable to parse SBOM")
         sbom = tmp_path / "repo.cdx.json"
@@ -112,7 +112,7 @@ class TestScanSbom:
         with pytest.raises(RuntimeError):
             scan_sbom(sbom, tmp_path / "repo.json")
 
-    @patch("analyzer.grype.subprocess.run")
+    @patch("miner.grype_runner.subprocess.run")
     def test_error_message_includes_stdout(self, mock_run, tmp_path: Path):
         """Grype sometimes reports the real problem on stdout, not stderr."""
         mock_run.return_value = _mock_process(returncode=1, stdout="bad SBOM detail")

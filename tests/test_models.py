@@ -2,7 +2,7 @@
 
 from datetime import datetime, timezone
 
-from reporter.models import (
+from miner.models import (
     AnalysisSummary,
     Finding,
     OrganizationReport,
