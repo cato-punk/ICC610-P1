@@ -51,3 +51,4 @@ Thumbs.db
 # Datos crudos (clones, SARIF, SBOM, JSON de Grype); se conservan los .gitkeep
 data/raw/*
 !data/raw/.gitkeep
+.ipynb_checkpoints/
