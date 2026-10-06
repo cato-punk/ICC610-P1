@@ -1,0 +1,412 @@
+source,repository,vulnerability_id,title,severity,location,start_line,package,package_version,fix_versions
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/auth/main.py,193,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,examples/auth_flask_login/main.py,184,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/auth_flask_login/main.py,291,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/azure_blob_storage/main.py,37,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/babel/main.py,89,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,examples/bootstrap4/main.py,54,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/bootstrap4/main.py,223,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/csp_nonce/main.py,39,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/custom_layout/main.py,129,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/datetime_timezone/main.py,131,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/forms_files_images/main.py,258,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/geo_alchemy/main.py,104,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/host_matching/main.py,60,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/methodview/main.py,44,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/mongoengine/main.py,189,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/multiple_admin_instances/main.py,35,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/peewee_simple/main.py,155,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/pymongo_simple/main.py,118,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/rediscli/main.py,30,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/s3/main.py,72,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/simple/main.py,36,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/sqla_association_proxy/main.py,120,,,
+codeql,pallets-eco/flask-admin,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/sqla_custom_inline_forms/main.py,184,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/actions.py,138,,,
+codeql,pallets-eco/flask-admin,py/path-injection,This path depends on a [user-provided value](1).,warning,flask_admin/contrib/fileadmin/__init__.py,151,,,
+codeql,pallets-eco/flask-admin,py/path-injection,This path depends on a [user-provided value](1).,warning,flask_admin/contrib/fileadmin/__init__.py,175,,,
+codeql,pallets-eco/flask-admin,py/path-injection,This path depends on a [user-provided value](1).,warning,flask_admin/contrib/fileadmin/__init__.py,182,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2352,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2375,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2378,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2404,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2408,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2414,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2432,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2461,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2465,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2471,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2494,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2505,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2518,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2522,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2577,,,
+codeql,pallets-eco/flask-admin,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_admin/model/base.py,2670,,,
+codeql,pallets-eco/flask-caching,py/reflective-xss,"Cross-site scripting vulnerability due to a [user-provided value](1).
+Cross-site scripting vulnerability due to a [user-provided value](2).",warning,examples/hello.py,46,,,
+codeql,pallets-eco/flask-caching,py/log-injection,This log entry depends on a [user-provided value](1).,warning,src/flask_caching/__init__.py,650,,,
+codeql,pallets-eco/flask-debugtoolbar,py/stack-trace-exposure,[Stack trace information](1) flows to this location and may be exposed to an external user.,warning,src/flask_debugtoolbar/panels/template.py,147,,,
+codeql,pallets-eco/flask-openid,py/url-redirection,"Untrusted URL redirection depends on a [user-provided value](1).
+Untrusted URL redirection depends on a [user-provided value](1).",warning,flask_openid.py,565,,,
+codeql,pallets-eco/flask-security,py/weak-sensitive-data-hashing,"[Sensitive data (password)](1) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](2) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](3) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](4) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](5) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](6) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](7) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](8) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](9) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](10) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](11) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.",warning,flask_security/utils.py,388,,,
+codeql,pallets-eco/flask-security,py/weak-sensitive-data-hashing,"[Sensitive data (password)](1) is used in a hashing algorithm (SHA1) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](2) is used in a hashing algorithm (SHA1) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](3) is used in a hashing algorithm (SHA1) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](4) is used in a hashing algorithm (SHA1) that is insecure for password hashing, since it is not a computationally expensive hash function.",warning,flask_security/utils.py,1471,,,
+codeql,pallets-eco/flask-security-3.0,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_security/decorators.py,61,,,
+codeql,pallets-eco/flask-security-3.0,py/weak-sensitive-data-hashing,"[Sensitive data (password)](1) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](2) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](3) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](4) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](5) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](6) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](7) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](8) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](9) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](10) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.
+[Sensitive data (password)](11) is used in a hashing algorithm (SHA512) that is insecure for password hashing, since it is not a computationally expensive hash function.",warning,flask_security/utils.py,128,,,
+codeql,pallets-eco/flask-security-3.0,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_security/views.py,82,,,
+codeql,pallets-eco/flask-security-3.0,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_security/views.py,98,,,
+codeql,pallets-eco/flask-security-3.0,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_security/views.py,131,,,
+codeql,pallets-eco/flask-security-3.0,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_security/views.py,184,,,
+codeql,pallets-eco/flask-session,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/hello.py,38,,,
+codeql,pallets-eco/flask-session,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/kitchen-sink.py,63,,,
+codeql,pallets-eco/flask-social,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_social/views.py,93,,,
+codeql,pallets-eco/flask-social,py/url-redirection,Untrusted URL redirection depends on a [user-provided value](1).,warning,flask_social/views.py,120,,,
+codeql,pallets-eco/secure-cookie,py/overly-permissive-file,Overly permissive mask in chmod sets file to world readable.,warning,src/secure_cookie/session.py,271,,,
+codeql,pallets-eco/wtforms,py/redos,This part of the regular expression may cause exponential backtracking on strings starting with '0-' and containing many repetitions of '--'.,warning,src/wtforms/validators.py,839,,,
+codeql,pallets-eco/wtforms-sqlalchemy,py/flask-debug,A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger.,warning,examples/flask/basic.py,46,,,
+grype,pallets-eco/blinker,GHSA-86qp-5c8j-p5mr,"Starlette has missing Host header validation that poisons request.url.path, bypassing path-based security checks",Medium,/uv.lock,,starlette,0.47.0,1.0.1
+grype,pallets-eco/blinker,GHSA-38jv-5279-wg99,Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API),High,/uv.lock,,urllib3,2.4.0,2.6.3
+grype,pallets-eco/blinker,GHSA-2xpw-w6gg-jr37,urllib3 streaming API improperly handles highly compressed data,High,/uv.lock,,urllib3,2.4.0,2.6.0
+grype,pallets-eco/blinker,GHSA-gm62-xv2j-4w53,urllib3 allows an unbounded number of links in the decompression chain,High,/uv.lock,,urllib3,2.4.0,2.6.0
+grype,pallets-eco/blinker,GHSA-7f5h-v6xp-fcq8,Starlette vulnerable to O(n^2) DoS via Range header merging in ``starlette.responses.FileResponse``,High,/uv.lock,,starlette,0.47.0,0.49.1
+grype,pallets-eco/blinker,GHSA-9hjg-9r4m-mvj7,Requests vulnerable to .netrc credentials leak via malicious URLs,Medium,/uv.lock,,requests,2.32.3,2.32.4
+grype,pallets-eco/blinker,GHSA-wqp7-x3pw-xc5r,Starlette: SSRF and NTLM credential theft via UNC paths in StaticFiles on Windows,High,/uv.lock,,starlette,0.47.0,1.1.0
+grype,pallets-eco/blinker,GHSA-82w8-qh3p-5jfq,Starlette: request.form() limits silently ignored for application/x-www-form-urlencoded enable DoS,High,/uv.lock,,starlette,0.47.0,1.3.1
+grype,pallets-eco/blinker,GHSA-2c2j-9gv5-cj73,Starlette has possible denial-of-service vector when parsing large files in multipart forms,Medium,/uv.lock,,starlette,0.47.0,0.47.2
+grype,pallets-eco/blinker,GHSA-82r6-8w77-94w6,AnyIO: TLSStream IDNA 2003 host name encoding enables potential TLS certificate spoofing,Critical,/uv.lock,,anyio,4.9.0,4.14.2
+grype,pallets-eco/blinker,GHSA-65pc-fj4g-8rjx,Internationalized Domain Names in Applications (IDNA): Specially crafted inputs to idna.encode() can bypass CVE-2024-3651 fix,Medium,/uv.lock,,idna,3.10,3.15
+grype,pallets-eco/blinker,GHSA-pq67-6m6q-mj2v,urllib3 redirects are not disabled when retries are disabled on PoolManager instantiation,Medium,/uv.lock,,urllib3,2.4.0,2.5.0
+grype,pallets-eco/blinker,GHSA-qccp-gfcp-xxvc,urllib3: Sensitive headers forwarded across origins in proxied low-level redirects,High,/uv.lock,,urllib3,2.4.0,2.7.0
+grype,pallets-eco/blinker,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.4.0,2.8.0
+grype,pallets-eco/blinker,GHSA-48p4-8xcf-vxj5,urllib3 does not control redirects in browsers and Node.js,Medium,/uv.lock,,urllib3,2.4.0,2.5.0
+grype,pallets-eco/blinker,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.4.0,2.8.0
+grype,pallets-eco/blinker,GHSA-x746-7m8f-x49c,Starlette: Arbitrary HTTP method dispatched to `HTTPEndpoint` attributes via `getattr`,Medium,/uv.lock,,starlette,0.47.0,1.1.0
+grype,pallets-eco/blinker,GHSA-94p9-xgh2-xp45,virtualenv: Downloaded seed wheels (pip/setuptools) are not integrity-checked before use,High,/uv.lock,,virtualenv,20.31.2,21.7.12
+grype,pallets-eco/blinker,GHSA-8qf3-x8v5-2pj8,uv allows ZIP payload obfuscation through parsing differentials,Medium,/uv.lock,,uv,0.7.9,0.8.6
+grype,pallets-eco/blinker,GHSA-p58f-9548-mpm2,virtualenv bash and fish activation scripts execute commands embedded in paths,High,/uv.lock,,virtualenv,20.31.2,21.7.13
+grype,pallets-eco/blinker,GHSA-w853-jp5j-5j7f,filelock has a TOCTOU race condition which allows symlink attacks during lock file creation,Medium,/uv.lock,,filelock,3.18.0,3.20.1
+grype,pallets-eco/blinker,GHSA-x78j-v8h9-3j2q,virtualenv: Command injection via --prompt in activate.bat (batch activator),High,/uv.lock,,virtualenv,20.31.2,21.7.12
+grype,pallets-eco/blinker,GHSA-5p39-cfhj-2xmp,AnyIO process-pool workers can block indefinitely on undrained stderr,Medium,/uv.lock,,anyio,4.9.0,4.14.2
+grype,pallets-eco/blinker,GHSA-6w46-j5rx-g56g,pytest has vulnerable tmpdir handling,Medium,/uv.lock,,pytest,8.3.5,9.0.3
+grype,pallets-eco/blinker,GHSA-jp82-jpqv-5vv3,Starlette: Unvalidated request path concatenated into authority poisons request.url.hostname,Low,/uv.lock,,starlette,0.47.0,1.3.0
+grype,pallets-eco/blinker,GHSA-gc5v-m9x4-r6x2,Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function,Medium,/uv.lock,,requests,2.32.3,2.33.0
+grype,pallets-eco/blinker,GHSA-9h9j-4vrj-gf7g,"virtualenv writes prompt values into pyvenv.cfg without sanitizing line boundaries, allowing configuration injection",Medium,/uv.lock,,virtualenv,20.31.2,21.7.11
+grype,pallets-eco/blinker,GHSA-qmgc-5h2g-mvrw,filelock Time-of-Check-Time-of-Use (TOCTOU) Symlink Vulnerability in SoftFileLock,Medium,/uv.lock,,filelock,3.18.0,3.20.3
+grype,pallets-eco/blinker,GHSA-597g-3phw-6986,virtualenv Has TOCTOU Vulnerabilities in Directory Creation,Medium,/uv.lock,,virtualenv,20.31.2,20.36.1
+grype,pallets-eco/blinker,GHSA-5239-wwwm-4pmq,Pygments has Regular Expression Denial of Service (ReDoS) due to Inefficient Regex for GUID Matching,Low,/uv.lock,,pygments,2.19.1,2.20.0
+grype,pallets-eco/blinker,GHSA-4gg8-gxpx-9rph,uv is vulnerable to arbitrary file write through entry point names,Medium,/uv.lock,,uv,0.7.9,0.11.15
+grype,pallets-eco/blinker,GHSA-pqhf-p39g-3x64,uv allows ZIP payload obfuscation through parsing differentials,Medium,/uv.lock,,uv,0.7.9,0.9.6
+grype,pallets-eco/blinker,GHSA-vxmw-7h4f-hqxh,PyPI publish GitHub Action vulnerable to injectable expression expansions in action steps,Low,/.github/workflows/publish.yaml,,pypa/gh-action-pypi-publish,v1.12.4,1.13.0
+grype,pallets-eco/blinker,GHSA-pjjw-68hj-v9mw,uv vulnerable to arbitrary file deletion through RECORD entries,Low,/uv.lock,,uv,0.7.9,0.11.6
+grype,pallets-eco/blinker,GHSA-w476-p2h3-79g9,uv has differential in tar extraction with PAX headers,Low,/uv.lock,,uv,0.7.9,0.9.5
+grype,pallets-eco/cachelib,GHSA-8fvv-fgr5-f8ch,pymongo: PYTHON-5994 Use exact match for file ID in GridFS delete methods,Medium,/uv.lock,,pymongo,4.17.0,4.18.1
+grype,pallets-eco/cachelib,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/cachelib,GHSA-vp6j-j7w5-5xjj,PyMongo: PYTHON-5986 Host injection in PyMongo connection string parsing via percent-encoded delimiters,High,/uv.lock,,pymongo,4.17.0,4.18.2
+grype,pallets-eco/cachelib,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/cachelib,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/cachelib,GHSA-94p9-xgh2-xp45,virtualenv: Downloaded seed wheels (pip/setuptools) are not integrity-checked before use,High,/uv.lock,,virtualenv,21.7.4,21.7.12
+grype,pallets-eco/cachelib,GHSA-p58f-9548-mpm2,virtualenv bash and fish activation scripts execute commands embedded in paths,High,/uv.lock,,virtualenv,21.7.4,21.7.13
+grype,pallets-eco/cachelib,GHSA-x78j-v8h9-3j2q,virtualenv: Command injection via --prompt in activate.bat (batch activator),High,/uv.lock,,virtualenv,21.7.4,21.7.12
+grype,pallets-eco/cachelib,GHSA-v4x9-3549-crwv,PyMongo: PYTHON-5996 Heap out-of-bounds write via signed size overflow in BSON document encoding,High,/uv.lock,,pymongo,4.17.0,4.18.2
+grype,pallets-eco/cachelib,GHSA-9h9j-4vrj-gf7g,"virtualenv writes prompt values into pyvenv.cfg without sanitizing line boundaries, allowing configuration injection",Medium,/uv.lock,,virtualenv,21.7.4,21.7.11
+grype,pallets-eco/cachelib,GHSA-qx36-8mw2-4r3x,PyMongo: PYTHON-5990 Forced Unix domain socket connection via a .sock KMS endpoint in client-side field level encryption,Medium,/uv.lock,,pymongo,4.17.0,4.18.2
+grype,pallets-eco/croniter,GHSA-mf9v-mfxr-j63j,urllib3: Decompression-bomb safeguards bypassed in parts of the streaming API,High,/uv.lock,,urllib3,2.6.3,2.7.0
+grype,pallets-eco/croniter,GHSA-qccp-gfcp-xxvc,urllib3: Sensitive headers forwarded across origins in proxied low-level redirects,High,/uv.lock,,urllib3,2.6.3,2.7.0
+grype,pallets-eco/croniter,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/croniter,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/croniter,GHSA-h35f-9h28-mq5c,setuptools: MANIFEST.in exclusion bypass in sdist via Unicode normalization collision (NFC/NFD) on macOS APFS/HFS+,Medium,/uv.lock,,setuptools,82.0.1,83.0.0
+grype,pallets-eco/croniter,GHSA-g6cj-pr64-35w5,cryptography: PKCS#7 EnvelopedData decryption exposes a Bleichenbacher oracle through distinguishable errors and timing,High,/uv.lock,,cryptography,47.0.0,50.0.0
+grype,pallets-eco/croniter,GHSA-g6cj-pr64-35w5,cryptography: PKCS#7 EnvelopedData decryption exposes a Bleichenbacher oracle through distinguishable errors and timing,High,/uv.lock,,cryptography,49.0.0,50.0.0
+grype,pallets-eco/croniter,GHSA-jwv3-5hgf-82ww,python-cryptography: Duplicate self-signed intermediates can cause exponential path-building,High,/uv.lock,,cryptography,47.0.0,49.0.0
+grype,pallets-eco/croniter,GHSA-m2h6-j472-rp4c,python-cryptography verifier accepts wildcard DNS names allowing escape from permittedSubtrees,Medium,/uv.lock,,cryptography,47.0.0,49.0.0
+grype,pallets-eco/croniter,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/croniter,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/croniter,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/croniter,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/croniter,GHSA-94p9-xgh2-xp45,virtualenv: Downloaded seed wheels (pip/setuptools) are not integrity-checked before use,High,/uv.lock,,virtualenv,21.5.1,21.7.12
+grype,pallets-eco/croniter,GHSA-p58f-9548-mpm2,virtualenv bash and fish activation scripts execute commands embedded in paths,High,/uv.lock,,virtualenv,21.5.1,21.7.13
+grype,pallets-eco/croniter,GHSA-w853-jp5j-5j7f,filelock has a TOCTOU race condition which allows symlink attacks during lock file creation,Medium,/uv.lock,,filelock,3.19.1,3.20.1
+grype,pallets-eco/croniter,GHSA-x78j-v8h9-3j2q,virtualenv: Command injection via --prompt in activate.bat (batch activator),High,/uv.lock,,virtualenv,21.5.1,21.7.12
+grype,pallets-eco/croniter,GHSA-6w46-j5rx-g56g,pytest has vulnerable tmpdir handling,Medium,/uv.lock,,pytest,8.4.2,9.0.3
+grype,pallets-eco/croniter,GHSA-gc5v-m9x4-r6x2,Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function,Medium,/uv.lock,,requests,2.32.5,2.33.0
+grype,pallets-eco/croniter,GHSA-9h9j-4vrj-gf7g,"virtualenv writes prompt values into pyvenv.cfg without sanitizing line boundaries, allowing configuration injection",Medium,/uv.lock,,virtualenv,21.5.1,21.7.11
+grype,pallets-eco/croniter,GHSA-qmgc-5h2g-mvrw,filelock Time-of-Check-Time-of-Use (TOCTOU) Symlink Vulnerability in SoftFileLock,Medium,/uv.lock,,filelock,3.19.1,3.20.3
+grype,pallets-eco/croniter,GHSA-537c-gmf6-5ccf,Vulnerable OpenSSL included in cryptography wheels,High,/uv.lock,,cryptography,47.0.0,48.0.1
+grype,pallets-eco/flask-admin,GHSA-8fvv-fgr5-f8ch,pymongo: PYTHON-5994 Use exact match for file ID in GridFS delete methods,Medium,/uv.lock,,pymongo,4.17.0,4.18.1
+grype,pallets-eco/flask-admin,GHSA-g6x2-hccm-hh4m,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.1.8,3.1.9
+grype,pallets-eco/flask-admin,GHSA-vp6j-j7w5-5xjj,PyMongo: PYTHON-5986 Host injection in PyMongo connection string parsing via percent-encoded delimiters,High,/uv.lock,,pymongo,4.17.0,4.18.2
+grype,pallets-eco/flask-admin,GHSA-v4x9-3549-crwv,PyMongo: PYTHON-5996 Heap out-of-bounds write via signed size overflow in BSON document encoding,High,/uv.lock,,pymongo,4.17.0,4.18.2
+grype,pallets-eco/flask-admin,GHSA-qx36-8mw2-4r3x,PyMongo: PYTHON-5990 Forced Unix domain socket connection via a .sock KMS endpoint in client-side field level encryption,Medium,/uv.lock,,pymongo,4.17.0,4.18.2
+grype,pallets-eco/flask-classful,GHSA-38jv-5279-wg99,Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API),High,/uv.lock,,urllib3,2.2.3,2.6.3
+grype,pallets-eco/flask-classful,GHSA-mf9v-mfxr-j63j,urllib3: Decompression-bomb safeguards bypassed in parts of the streaming API,High,/uv.lock,,urllib3,2.6.3,2.7.0
+grype,pallets-eco/flask-classful,GHSA-2xpw-w6gg-jr37,urllib3 streaming API improperly handles highly compressed data,High,/uv.lock,,urllib3,2.2.3,2.6.0
+grype,pallets-eco/flask-classful,GHSA-gm62-xv2j-4w53,urllib3 allows an unbounded number of links in the decompression chain,High,/uv.lock,,urllib3,2.2.3,2.6.0
+grype,pallets-eco/flask-classful,GHSA-29vq-49wr-vm6x,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.0.6,3.1.6
+grype,pallets-eco/flask-classful,GHSA-hgf8-39gv-g3f2,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.0.6,3.1.4
+grype,pallets-eco/flask-classful,GHSA-87hc-h4r5-73f7,Werkzeug safe_join() allows Windows special device names with compound extensions,Medium,/uv.lock,,werkzeug,3.0.6,3.1.5
+grype,pallets-eco/flask-classful,GHSA-pq67-6m6q-mj2v,urllib3 redirects are not disabled when retries are disabled on PoolManager instantiation,Medium,/uv.lock,,urllib3,2.2.3,2.5.0
+grype,pallets-eco/flask-classful,GHSA-qccp-gfcp-xxvc,urllib3: Sensitive headers forwarded across origins in proxied low-level redirects,High,/uv.lock,,urllib3,2.2.3,2.7.0
+grype,pallets-eco/flask-classful,GHSA-qccp-gfcp-xxvc,urllib3: Sensitive headers forwarded across origins in proxied low-level redirects,High,/uv.lock,,urllib3,2.6.3,2.7.0
+grype,pallets-eco/flask-classful,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.2.3,2.8.0
+grype,pallets-eco/flask-classful,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-classful,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-classful,GHSA-g6x2-hccm-hh4m,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.0.6,3.1.9
+grype,pallets-eco/flask-classful,GHSA-g6x2-hccm-hh4m,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.1.8,3.1.9
+grype,pallets-eco/flask-classful,GHSA-48p4-8xcf-vxj5,urllib3 does not control redirects in browsers and Node.js,Medium,/uv.lock,,urllib3,2.2.3,2.5.0
+grype,pallets-eco/flask-classful,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.2.3,2.8.0
+grype,pallets-eco/flask-classful,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-classful,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-classful,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-classful,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-classful,GHSA-428g-f7cq-pgp5,Marshmallow has DoS in Schema.load(many),Medium,/uv.lock,,marshmallow,3.22.0,3.26.2
+grype,pallets-eco/flask-classful,GHSA-428g-f7cq-pgp5,Marshmallow has DoS in Schema.load(many),Medium,/uv.lock,,marshmallow,4.0.1,4.1.2
+grype,pallets-eco/flask-classful,GHSA-94p9-xgh2-xp45,virtualenv: Downloaded seed wheels (pip/setuptools) are not integrity-checked before use,High,/uv.lock,,virtualenv,21.3.3,21.7.12
+grype,pallets-eco/flask-classful,GHSA-p58f-9548-mpm2,virtualenv bash and fish activation scripts execute commands embedded in paths,High,/uv.lock,,virtualenv,21.3.3,21.7.13
+grype,pallets-eco/flask-classful,GHSA-68rp-wp8r-4726,Flask session does not add `Vary: Cookie` header when accessed in some ways,Low,/uv.lock,,flask,3.0.3,3.1.3
+grype,pallets-eco/flask-classful,GHSA-w853-jp5j-5j7f,filelock has a TOCTOU race condition which allows symlink attacks during lock file creation,Medium,/uv.lock,,filelock,3.16.1,3.20.1
+grype,pallets-eco/flask-classful,GHSA-w853-jp5j-5j7f,filelock has a TOCTOU race condition which allows symlink attacks during lock file creation,Medium,/uv.lock,,filelock,3.19.1,3.20.1
+grype,pallets-eco/flask-classful,GHSA-x78j-v8h9-3j2q,virtualenv: Command injection via --prompt in activate.bat (batch activator),High,/uv.lock,,virtualenv,21.3.3,21.7.12
+grype,pallets-eco/flask-classful,GHSA-6w46-j5rx-g56g,pytest has vulnerable tmpdir handling,Medium,/uv.lock,,pytest,8.3.5,9.0.3
+grype,pallets-eco/flask-classful,GHSA-6w46-j5rx-g56g,pytest has vulnerable tmpdir handling,Medium,/uv.lock,,pytest,8.4.2,9.0.3
+grype,pallets-eco/flask-classful,GHSA-gc5v-m9x4-r6x2,Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function,Medium,/uv.lock,,requests,2.32.4,2.33.0
+grype,pallets-eco/flask-classful,GHSA-gc5v-m9x4-r6x2,Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function,Medium,/uv.lock,,requests,2.32.5,2.33.0
+grype,pallets-eco/flask-classful,GHSA-9h9j-4vrj-gf7g,"virtualenv writes prompt values into pyvenv.cfg without sanitizing line boundaries, allowing configuration injection",Medium,/uv.lock,,virtualenv,21.3.3,21.7.11
+grype,pallets-eco/flask-classful,GHSA-qmgc-5h2g-mvrw,filelock Time-of-Check-Time-of-Use (TOCTOU) Symlink Vulnerability in SoftFileLock,Medium,/uv.lock,,filelock,3.16.1,3.20.3
+grype,pallets-eco/flask-classful,GHSA-qmgc-5h2g-mvrw,filelock Time-of-Check-Time-of-Use (TOCTOU) Symlink Vulnerability in SoftFileLock,Medium,/uv.lock,,filelock,3.19.1,3.20.3
+grype,pallets-eco/flask-classful,GHSA-5239-wwwm-4pmq,Pygments has Regular Expression Denial of Service (ReDoS) due to Inefficient Regex for GUID Matching,Low,/uv.lock,,pygments,2.19.2,2.20.0
+grype,pallets-eco/flask-debugtoolbar,GHSA-vxmw-7h4f-hqxh,PyPI publish GitHub Action vulnerable to injectable expression expansions in action steps,Low,/.github/workflows/publish.yaml,,pypa/gh-action-pypi-publish,v1.10.0,1.13.0
+grype,pallets-eco/flask-mail,GHSA-mf9v-mfxr-j63j,urllib3: Decompression-bomb safeguards bypassed in parts of the streaming API,High,/uv.lock,,urllib3,2.6.3,2.7.0
+grype,pallets-eco/flask-mail,GHSA-2wc2-fm75-p42x,Soup Sieve has Memory Exhaustion via Large Comma-Separated Selector Lists,High,/uv.lock,,soupsieve,2.8.3,2.8.4
+grype,pallets-eco/flask-mail,GHSA-836r-79rf-4m37,Soup Sieve: Regular Expression Denial of Service (ReDoS) via Selector Parser,High,/uv.lock,,soupsieve,2.8.3,2.8.4
+grype,pallets-eco/flask-mail,GHSA-j934-xhv5-fg8f,Soup Sieve: Polynomial-time ReDoS (O(n²)) in the whitespace/comment trimming regex `RE_WS_END` (triggers on VALID selectors),Medium,/uv.lock,,soupsieve,2.8.3,2.9.0
+grype,pallets-eco/flask-mail,GHSA-gjv8-xp57-g29c,Soup Sieve: Polynomial-time ReDoS (O(n²)) in the `IDENTIFIER` / `VALUE` selector sub-patterns,Medium,/uv.lock,,soupsieve,2.8.3,2.9.0
+grype,pallets-eco/flask-mail,GHSA-82r6-8w77-94w6,AnyIO: TLSStream IDNA 2003 host name encoding enables potential TLS certificate spoofing,Critical,/uv.lock,,anyio,4.13.0,4.14.2
+grype,pallets-eco/flask-mail,GHSA-qccp-gfcp-xxvc,urllib3: Sensitive headers forwarded across origins in proxied low-level redirects,High,/uv.lock,,urllib3,2.6.3,2.7.0
+grype,pallets-eco/flask-mail,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-mail,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-mail,GHSA-g6x2-hccm-hh4m,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.1.8,3.1.9
+grype,pallets-eco/flask-mail,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-mail,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-mail,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-mail,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-mail,GHSA-94p9-xgh2-xp45,virtualenv: Downloaded seed wheels (pip/setuptools) are not integrity-checked before use,High,/uv.lock,,virtualenv,21.3.3,21.7.12
+grype,pallets-eco/flask-mail,GHSA-p58f-9548-mpm2,virtualenv bash and fish activation scripts execute commands embedded in paths,High,/uv.lock,,virtualenv,21.3.3,21.7.13
+grype,pallets-eco/flask-mail,GHSA-w853-jp5j-5j7f,filelock has a TOCTOU race condition which allows symlink attacks during lock file creation,Medium,/uv.lock,,filelock,3.19.1,3.20.1
+grype,pallets-eco/flask-mail,GHSA-x78j-v8h9-3j2q,virtualenv: Command injection via --prompt in activate.bat (batch activator),High,/uv.lock,,virtualenv,21.3.3,21.7.12
+grype,pallets-eco/flask-mail,GHSA-5p39-cfhj-2xmp,AnyIO process-pool workers can block indefinitely on undrained stderr,Medium,/uv.lock,,anyio,4.13.0,4.14.2
+grype,pallets-eco/flask-mail,GHSA-6w46-j5rx-g56g,pytest has vulnerable tmpdir handling,Medium,/uv.lock,,pytest,8.4.2,9.0.3
+grype,pallets-eco/flask-mail,GHSA-gc5v-m9x4-r6x2,Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function,Medium,/uv.lock,,requests,2.32.5,2.33.0
+grype,pallets-eco/flask-mail,GHSA-9h9j-4vrj-gf7g,"virtualenv writes prompt values into pyvenv.cfg without sanitizing line boundaries, allowing configuration injection",Medium,/uv.lock,,virtualenv,21.3.3,21.7.11
+grype,pallets-eco/flask-mail,GHSA-qmgc-5h2g-mvrw,filelock Time-of-Check-Time-of-Use (TOCTOU) Symlink Vulnerability in SoftFileLock,Medium,/uv.lock,,filelock,3.19.1,3.20.3
+grype,pallets-eco/flask-orjson,GHSA-86qp-5c8j-p5mr,"Starlette has missing Host header validation that poisons request.url.path, bypassing path-based security checks",Medium,/uv.lock,,starlette,0.47.0,1.0.1
+grype,pallets-eco/flask-orjson,GHSA-38jv-5279-wg99,Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API),High,/uv.lock,,urllib3,2.2.3,2.6.3
+grype,pallets-eco/flask-orjson,GHSA-38jv-5279-wg99,Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API),High,/uv.lock,,urllib3,2.4.0,2.6.3
+grype,pallets-eco/flask-orjson,GHSA-2xpw-w6gg-jr37,urllib3 streaming API improperly handles highly compressed data,High,/uv.lock,,urllib3,2.2.3,2.6.0
+grype,pallets-eco/flask-orjson,GHSA-gm62-xv2j-4w53,urllib3 allows an unbounded number of links in the decompression chain,High,/uv.lock,,urllib3,2.2.3,2.6.0
+grype,pallets-eco/flask-orjson,GHSA-2xpw-w6gg-jr37,urllib3 streaming API improperly handles highly compressed data,High,/uv.lock,,urllib3,2.4.0,2.6.0
+grype,pallets-eco/flask-orjson,GHSA-gm62-xv2j-4w53,urllib3 allows an unbounded number of links in the decompression chain,High,/uv.lock,,urllib3,2.4.0,2.6.0
+grype,pallets-eco/flask-orjson,GHSA-7cx3-6m66-7c5m,Tornado vulnerable to excessive logging caused by malformed multipart form data,High,/uv.lock,,tornado,6.4.2,6.5
+grype,pallets-eco/flask-orjson,GHSA-7f5h-v6xp-fcq8,Starlette vulnerable to O(n^2) DoS via Range header merging in ``starlette.responses.FileResponse``,High,/uv.lock,,starlette,0.47.0,0.49.1
+grype,pallets-eco/flask-orjson,GHSA-9hjg-9r4m-mvj7,Requests vulnerable to .netrc credentials leak via malicious URLs,Medium,/uv.lock,,requests,2.32.3,2.32.4
+grype,pallets-eco/flask-orjson,GHSA-hx9q-6w63-j58v,orjson does not limit recursion for deeply nested JSON documents,High,/uv.lock,,orjson,3.10.15,3.11.6
+grype,pallets-eco/flask-orjson,GHSA-hx9q-6w63-j58v,orjson does not limit recursion for deeply nested JSON documents,High,/uv.lock,,orjson,3.10.18,3.11.6
+grype,pallets-eco/flask-orjson,GHSA-wqp7-x3pw-xc5r,Starlette: SSRF and NTLM credential theft via UNC paths in StaticFiles on Windows,High,/uv.lock,,starlette,0.47.0,1.1.0
+grype,pallets-eco/flask-orjson,GHSA-2wc2-fm75-p42x,Soup Sieve has Memory Exhaustion via Large Comma-Separated Selector Lists,High,/uv.lock,,soupsieve,2.7,2.8.4
+grype,pallets-eco/flask-orjson,GHSA-836r-79rf-4m37,Soup Sieve: Regular Expression Denial of Service (ReDoS) via Selector Parser,High,/uv.lock,,soupsieve,2.7,2.8.4
+grype,pallets-eco/flask-orjson,GHSA-mgf9-4vpg-hj56,tornado AsyncHTTPClient accumulates decompressed chunks without size limit (gzip bomb),High,/uv.lock,,tornado,6.4.2,6.5.6
+grype,pallets-eco/flask-orjson,GHSA-c98p-7wgm-6p64,Tornado: Quadratic DoS via Repeated Header Coalescing,High,/uv.lock,,tornado,6.4.2,6.5.3
+grype,pallets-eco/flask-orjson,GHSA-jhmp-mqwm-3gq8,Tornado: Quadratic DoS via Crafted Multipart Parameters,High,/uv.lock,,tornado,6.4.2,6.5.3
+grype,pallets-eco/flask-orjson,GHSA-qjxf-f2mg-c6mc,Tornado is vulnerable to DoS due to too many multipart parts,High,/uv.lock,,tornado,6.4.2,6.5.5
+grype,pallets-eco/flask-orjson,GHSA-82w8-qh3p-5jfq,Starlette: request.form() limits silently ignored for application/x-www-form-urlencoded enable DoS,High,/uv.lock,,starlette,0.47.0,1.3.1
+grype,pallets-eco/flask-orjson,GHSA-3x9g-8vmp-wqvf,Tornado: Authorization header forwarded across cross-origin redirects in SimpleAsyncHTTPClient,High,/uv.lock,,tornado,6.4.2,6.5.6
+grype,pallets-eco/flask-orjson,GHSA-j934-xhv5-fg8f,Soup Sieve: Polynomial-time ReDoS (O(n²)) in the whitespace/comment trimming regex `RE_WS_END` (triggers on VALID selectors),Medium,/uv.lock,,soupsieve,2.7,2.9.0
+grype,pallets-eco/flask-orjson,GHSA-gjv8-xp57-g29c,Soup Sieve: Polynomial-time ReDoS (O(n²)) in the `IDENTIFIER` / `VALUE` selector sub-patterns,Medium,/uv.lock,,soupsieve,2.7,2.9.0
+grype,pallets-eco/flask-orjson,GHSA-29vq-49wr-vm6x,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.0.6,3.1.6
+grype,pallets-eco/flask-orjson,GHSA-29vq-49wr-vm6x,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.1.3,3.1.6
+grype,pallets-eco/flask-orjson,GHSA-2c2j-9gv5-cj73,Starlette has possible denial-of-service vector when parsing large files in multipart forms,Medium,/uv.lock,,starlette,0.47.0,0.47.2
+grype,pallets-eco/flask-orjson,GHSA-hgf8-39gv-g3f2,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.0.6,3.1.4
+grype,pallets-eco/flask-orjson,GHSA-hgf8-39gv-g3f2,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.1.3,3.1.4
+grype,pallets-eco/flask-orjson,GHSA-82r6-8w77-94w6,AnyIO: TLSStream IDNA 2003 host name encoding enables potential TLS certificate spoofing,Critical,/uv.lock,,anyio,4.9.0,4.14.2
+grype,pallets-eco/flask-orjson,GHSA-mpf4-983q-p7j4,"Tornado: Urlencoded body parsing omits max_num_fields, so one request can stall the event loop",High,/uv.lock,,tornado,6.4.2,6.5.8
+grype,pallets-eco/flask-orjson,GHSA-87hc-h4r5-73f7,Werkzeug safe_join() allows Windows special device names with compound extensions,Medium,/uv.lock,,werkzeug,3.0.6,3.1.5
+grype,pallets-eco/flask-orjson,GHSA-87hc-h4r5-73f7,Werkzeug safe_join() allows Windows special device names with compound extensions,Medium,/uv.lock,,werkzeug,3.1.3,3.1.5
+grype,pallets-eco/flask-orjson,GHSA-65pc-fj4g-8rjx,Internationalized Domain Names in Applications (IDNA): Specially crafted inputs to idna.encode() can bypass CVE-2024-3651 fix,Medium,/uv.lock,,idna,3.10,3.15
+grype,pallets-eco/flask-orjson,GHSA-pq67-6m6q-mj2v,urllib3 redirects are not disabled when retries are disabled on PoolManager instantiation,Medium,/uv.lock,,urllib3,2.2.3,2.5.0
+grype,pallets-eco/flask-orjson,GHSA-pq67-6m6q-mj2v,urllib3 redirects are not disabled when retries are disabled on PoolManager instantiation,Medium,/uv.lock,,urllib3,2.4.0,2.5.0
+grype,pallets-eco/flask-orjson,GHSA-qccp-gfcp-xxvc,urllib3: Sensitive headers forwarded across origins in proxied low-level redirects,High,/uv.lock,,urllib3,2.2.3,2.7.0
+grype,pallets-eco/flask-orjson,GHSA-qccp-gfcp-xxvc,urllib3: Sensitive headers forwarded across origins in proxied low-level redirects,High,/uv.lock,,urllib3,2.4.0,2.7.0
+grype,pallets-eco/flask-orjson,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.2.3,2.8.0
+grype,pallets-eco/flask-orjson,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.4.0,2.8.0
+grype,pallets-eco/flask-orjson,GHSA-fqwm-6jpj-5wxc,Tornado has cookie attribute injection via .RequestHandler.set_cookie,High,/uv.lock,,tornado,6.4.2,6.5.5
+grype,pallets-eco/flask-orjson,GHSA-g6x2-hccm-hh4m,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.0.6,3.1.9
+grype,pallets-eco/flask-orjson,GHSA-g6x2-hccm-hh4m,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.1.3,3.1.9
+grype,pallets-eco/flask-orjson,GHSA-48p4-8xcf-vxj5,urllib3 does not control redirects in browsers and Node.js,Medium,/uv.lock,,urllib3,2.2.3,2.5.0
+grype,pallets-eco/flask-orjson,GHSA-48p4-8xcf-vxj5,urllib3 does not control redirects in browsers and Node.js,Medium,/uv.lock,,urllib3,2.4.0,2.5.0
+grype,pallets-eco/flask-orjson,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.2.3,2.8.0
+grype,pallets-eco/flask-orjson,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.4.0,2.8.0
+grype,pallets-eco/flask-orjson,GHSA-x746-7m8f-x49c,Starlette: Arbitrary HTTP method dispatched to `HTTPEndpoint` attributes via `getattr`,Medium,/uv.lock,,starlette,0.47.0,1.1.0
+grype,pallets-eco/flask-orjson,GHSA-cx3h-4qpv-8hc9,Tornado has out-of-bounds memory access via C extension,Low,/uv.lock,,tornado,6.4.2,6.5.6
+grype,pallets-eco/flask-orjson,GHSA-pr2v-jx2c-wg9f,Tornado vulnerable to Header Injection and XSS via reason argument,Medium,/uv.lock,,tornado,6.4.2,6.5.3
+grype,pallets-eco/flask-orjson,GHSA-94p9-xgh2-xp45,virtualenv: Downloaded seed wheels (pip/setuptools) are not integrity-checked before use,High,/uv.lock,,virtualenv,20.31.2,21.7.12
+grype,pallets-eco/flask-orjson,GHSA-8qf3-x8v5-2pj8,uv allows ZIP payload obfuscation through parsing differentials,Medium,/uv.lock,,uv,0.7.8,0.8.6
+grype,pallets-eco/flask-orjson,GHSA-p58f-9548-mpm2,virtualenv bash and fish activation scripts execute commands embedded in paths,High,/uv.lock,,virtualenv,20.31.2,21.7.13
+grype,pallets-eco/flask-orjson,GHSA-68rp-wp8r-4726,Flask session does not add `Vary: Cookie` header when accessed in some ways,Low,/uv.lock,,flask,3.0.3,3.1.3
+grype,pallets-eco/flask-orjson,GHSA-68rp-wp8r-4726,Flask session does not add `Vary: Cookie` header when accessed in some ways,Low,/uv.lock,,flask,3.1.1,3.1.3
+grype,pallets-eco/flask-orjson,GHSA-w853-jp5j-5j7f,filelock has a TOCTOU race condition which allows symlink attacks during lock file creation,Medium,/uv.lock,,filelock,3.16.1,3.20.1
+grype,pallets-eco/flask-orjson,GHSA-w853-jp5j-5j7f,filelock has a TOCTOU race condition which allows symlink attacks during lock file creation,Medium,/uv.lock,,filelock,3.18.0,3.20.1
+grype,pallets-eco/flask-orjson,GHSA-x78j-v8h9-3j2q,virtualenv: Command injection via --prompt in activate.bat (batch activator),High,/uv.lock,,virtualenv,20.31.2,21.7.12
+grype,pallets-eco/flask-orjson,GHSA-5p39-cfhj-2xmp,AnyIO process-pool workers can block indefinitely on undrained stderr,Medium,/uv.lock,,anyio,4.9.0,4.14.2
+grype,pallets-eco/flask-orjson,GHSA-6w46-j5rx-g56g,pytest has vulnerable tmpdir handling,Medium,/uv.lock,,pytest,8.3.5,9.0.3
+grype,pallets-eco/flask-orjson,GHSA-jp82-jpqv-5vv3,Starlette: Unvalidated request path concatenated into authority poisons request.url.hostname,Low,/uv.lock,,starlette,0.47.0,1.3.0
+grype,pallets-eco/flask-orjson,GHSA-gc5v-m9x4-r6x2,Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function,Medium,/uv.lock,,requests,2.32.3,2.33.0
+grype,pallets-eco/flask-orjson,GHSA-9h9j-4vrj-gf7g,"virtualenv writes prompt values into pyvenv.cfg without sanitizing line boundaries, allowing configuration injection",Medium,/uv.lock,,virtualenv,20.31.2,21.7.11
+grype,pallets-eco/flask-orjson,GHSA-qmgc-5h2g-mvrw,filelock Time-of-Check-Time-of-Use (TOCTOU) Symlink Vulnerability in SoftFileLock,Medium,/uv.lock,,filelock,3.16.1,3.20.3
+grype,pallets-eco/flask-orjson,GHSA-qmgc-5h2g-mvrw,filelock Time-of-Check-Time-of-Use (TOCTOU) Symlink Vulnerability in SoftFileLock,Medium,/uv.lock,,filelock,3.18.0,3.20.3
+grype,pallets-eco/flask-orjson,GHSA-597g-3phw-6986,virtualenv Has TOCTOU Vulnerabilities in Directory Creation,Medium,/uv.lock,,virtualenv,20.31.2,20.36.1
+grype,pallets-eco/flask-orjson,GHSA-5239-wwwm-4pmq,Pygments has Regular Expression Denial of Service (ReDoS) due to Inefficient Regex for GUID Matching,Low,/uv.lock,,pygments,2.19.1,2.20.0
+grype,pallets-eco/flask-orjson,GHSA-c2m8-h5v5-343r,Tornado: StaticFileHandler follows symlinks outside static root (path traversal),High,/uv.lock,,tornado,6.4.2,6.5.9
+grype,pallets-eco/flask-orjson,GHSA-chx6-46f5-w4vp,tornado: CurlAsyncHTTPClient enforces no response-size limit — decompression bomb drives unbounded memory accumulation to OOM,High,/uv.lock,,tornado,6.4.2,6.5.9
+grype,pallets-eco/flask-orjson,GHSA-3hv7-mjh2-fv65,Tornado: Unbounded query-string argument count allows event-loop-stalling DoS,Medium,/uv.lock,,tornado,6.4.2,6.5.9
+grype,pallets-eco/flask-orjson,GHSA-78cv-mqj4-43f7,Tornado has incomplete validation of cookie attributes,Medium,/uv.lock,,tornado,6.4.2,6.5.5
+grype,pallets-eco/flask-orjson,GHSA-8423-8fgw-73vq,tornado: multipart split() creates huge temp list before max_parts check -> memory amplification DoS (httputil.py:34),Medium,/uv.lock,,tornado,6.4.2,6.5.8
+grype,pallets-eco/flask-orjson,GHSA-pw6j-qg29-8w7f,Tornado: CurlAsyncHTTPClient leaks per-request credentials on handle reuse,Medium,/uv.lock,,tornado,6.4.2,6.5.7
+grype,pallets-eco/flask-orjson,GHSA-4gg8-gxpx-9rph,uv is vulnerable to arbitrary file write through entry point names,Medium,/uv.lock,,uv,0.7.8,0.11.15
+grype,pallets-eco/flask-orjson,GHSA-pqhf-p39g-3x64,uv allows ZIP payload obfuscation through parsing differentials,Medium,/uv.lock,,uv,0.7.8,0.9.6
+grype,pallets-eco/flask-orjson,GHSA-vxmw-7h4f-hqxh,PyPI publish GitHub Action vulnerable to injectable expression expansions in action steps,Low,/.github/workflows/publish.yaml,,pypa/gh-action-pypi-publish,v1.12.4,1.13.0
+grype,pallets-eco/flask-orjson,GHSA-pjjw-68hj-v9mw,uv vulnerable to arbitrary file deletion through RECORD entries,Low,/uv.lock,,uv,0.7.8,0.11.6
+grype,pallets-eco/flask-orjson,GHSA-w476-p2h3-79g9,uv has differential in tar extraction with PAX headers,Low,/uv.lock,,uv,0.7.8,0.9.5
+grype,pallets-eco/flask-principal,GHSA-38jv-5279-wg99,Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API),High,/uv.lock,,urllib3,2.2.3,2.6.3
+grype,pallets-eco/flask-principal,GHSA-mf9v-mfxr-j63j,urllib3: Decompression-bomb safeguards bypassed in parts of the streaming API,High,/uv.lock,,urllib3,2.6.3,2.7.0
+grype,pallets-eco/flask-principal,GHSA-2xpw-w6gg-jr37,urllib3 streaming API improperly handles highly compressed data,High,/uv.lock,,urllib3,2.2.3,2.6.0
+grype,pallets-eco/flask-principal,GHSA-gm62-xv2j-4w53,urllib3 allows an unbounded number of links in the decompression chain,High,/uv.lock,,urllib3,2.2.3,2.6.0
+grype,pallets-eco/flask-principal,GHSA-29vq-49wr-vm6x,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.0.6,3.1.6
+grype,pallets-eco/flask-principal,GHSA-hgf8-39gv-g3f2,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.0.6,3.1.4
+grype,pallets-eco/flask-principal,GHSA-82r6-8w77-94w6,AnyIO: TLSStream IDNA 2003 host name encoding enables potential TLS certificate spoofing,Critical,/uv.lock,,anyio,4.13.0,4.14.2
+grype,pallets-eco/flask-principal,GHSA-87hc-h4r5-73f7,Werkzeug safe_join() allows Windows special device names with compound extensions,Medium,/uv.lock,,werkzeug,3.0.6,3.1.5
+grype,pallets-eco/flask-principal,GHSA-pq67-6m6q-mj2v,urllib3 redirects are not disabled when retries are disabled on PoolManager instantiation,Medium,/uv.lock,,urllib3,2.2.3,2.5.0
+grype,pallets-eco/flask-principal,GHSA-qccp-gfcp-xxvc,urllib3: Sensitive headers forwarded across origins in proxied low-level redirects,High,/uv.lock,,urllib3,2.2.3,2.7.0
+grype,pallets-eco/flask-principal,GHSA-qccp-gfcp-xxvc,urllib3: Sensitive headers forwarded across origins in proxied low-level redirects,High,/uv.lock,,urllib3,2.6.3,2.7.0
+grype,pallets-eco/flask-principal,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.2.3,2.8.0
+grype,pallets-eco/flask-principal,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-principal,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-principal,GHSA-g6x2-hccm-hh4m,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.0.6,3.1.9
+grype,pallets-eco/flask-principal,GHSA-g6x2-hccm-hh4m,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.1.8,3.1.9
+grype,pallets-eco/flask-principal,GHSA-48p4-8xcf-vxj5,urllib3 does not control redirects in browsers and Node.js,Medium,/uv.lock,,urllib3,2.2.3,2.5.0
+grype,pallets-eco/flask-principal,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.2.3,2.8.0
+grype,pallets-eco/flask-principal,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-principal,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-principal,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-principal,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-principal,GHSA-94p9-xgh2-xp45,virtualenv: Downloaded seed wheels (pip/setuptools) are not integrity-checked before use,High,/uv.lock,,virtualenv,21.3.3,21.7.12
+grype,pallets-eco/flask-principal,GHSA-p58f-9548-mpm2,virtualenv bash and fish activation scripts execute commands embedded in paths,High,/uv.lock,,virtualenv,21.3.3,21.7.13
+grype,pallets-eco/flask-principal,GHSA-68rp-wp8r-4726,Flask session does not add `Vary: Cookie` header when accessed in some ways,Low,/uv.lock,,flask,3.0.3,3.1.3
+grype,pallets-eco/flask-principal,GHSA-w853-jp5j-5j7f,filelock has a TOCTOU race condition which allows symlink attacks during lock file creation,Medium,/uv.lock,,filelock,3.16.1,3.20.1
+grype,pallets-eco/flask-principal,GHSA-w853-jp5j-5j7f,filelock has a TOCTOU race condition which allows symlink attacks during lock file creation,Medium,/uv.lock,,filelock,3.19.1,3.20.1
+grype,pallets-eco/flask-principal,GHSA-x78j-v8h9-3j2q,virtualenv: Command injection via --prompt in activate.bat (batch activator),High,/uv.lock,,virtualenv,21.3.3,21.7.12
+grype,pallets-eco/flask-principal,GHSA-5p39-cfhj-2xmp,AnyIO process-pool workers can block indefinitely on undrained stderr,Medium,/uv.lock,,anyio,4.13.0,4.14.2
+grype,pallets-eco/flask-principal,GHSA-6w46-j5rx-g56g,pytest has vulnerable tmpdir handling,Medium,/uv.lock,,pytest,8.3.5,9.0.3
+grype,pallets-eco/flask-principal,GHSA-6w46-j5rx-g56g,pytest has vulnerable tmpdir handling,Medium,/uv.lock,,pytest,8.4.2,9.0.3
+grype,pallets-eco/flask-principal,GHSA-gc5v-m9x4-r6x2,Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function,Medium,/uv.lock,,requests,2.32.4,2.33.0
+grype,pallets-eco/flask-principal,GHSA-gc5v-m9x4-r6x2,Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function,Medium,/uv.lock,,requests,2.32.5,2.33.0
+grype,pallets-eco/flask-principal,GHSA-9h9j-4vrj-gf7g,"virtualenv writes prompt values into pyvenv.cfg without sanitizing line boundaries, allowing configuration injection",Medium,/uv.lock,,virtualenv,21.3.3,21.7.11
+grype,pallets-eco/flask-principal,GHSA-qmgc-5h2g-mvrw,filelock Time-of-Check-Time-of-Use (TOCTOU) Symlink Vulnerability in SoftFileLock,Medium,/uv.lock,,filelock,3.16.1,3.20.3
+grype,pallets-eco/flask-principal,GHSA-qmgc-5h2g-mvrw,filelock Time-of-Check-Time-of-Use (TOCTOU) Symlink Vulnerability in SoftFileLock,Medium,/uv.lock,,filelock,3.19.1,3.20.3
+grype,pallets-eco/flask-principal,GHSA-5239-wwwm-4pmq,Pygments has Regular Expression Denial of Service (ReDoS) due to Inefficient Regex for GUID Matching,Low,/uv.lock,,pygments,2.19.2,2.20.0
+grype,pallets-eco/flask-pydantic,GHSA-vxmw-7h4f-hqxh,PyPI publish GitHub Action vulnerable to injectable expression expansions in action steps,Low,/.github/workflows/publish.yaml,,pypa/gh-action-pypi-publish,v1.12.4,1.13.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-38jv-5279-wg99,Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API),High,/uv.lock,,urllib3,2.2.3,2.6.3
+grype,pallets-eco/flask-sqlalchemy,GHSA-mf9v-mfxr-j63j,urllib3: Decompression-bomb safeguards bypassed in parts of the streaming API,High,/uv.lock,,urllib3,2.6.3,2.7.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-2xpw-w6gg-jr37,urllib3 streaming API improperly handles highly compressed data,High,/uv.lock,,urllib3,2.2.3,2.6.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-gm62-xv2j-4w53,urllib3 allows an unbounded number of links in the decompression chain,High,/uv.lock,,urllib3,2.2.3,2.6.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-29vq-49wr-vm6x,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.0.6,3.1.6
+grype,pallets-eco/flask-sqlalchemy,GHSA-hgf8-39gv-g3f2,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.0.6,3.1.4
+grype,pallets-eco/flask-sqlalchemy,GHSA-82r6-8w77-94w6,AnyIO: TLSStream IDNA 2003 host name encoding enables potential TLS certificate spoofing,Critical,/uv.lock,,anyio,4.13.0,4.14.2
+grype,pallets-eco/flask-sqlalchemy,GHSA-87hc-h4r5-73f7,Werkzeug safe_join() allows Windows special device names with compound extensions,Medium,/uv.lock,,werkzeug,3.0.6,3.1.5
+grype,pallets-eco/flask-sqlalchemy,GHSA-pq67-6m6q-mj2v,urllib3 redirects are not disabled when retries are disabled on PoolManager instantiation,Medium,/uv.lock,,urllib3,2.2.3,2.5.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-qccp-gfcp-xxvc,urllib3: Sensitive headers forwarded across origins in proxied low-level redirects,High,/uv.lock,,urllib3,2.2.3,2.7.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-qccp-gfcp-xxvc,urllib3: Sensitive headers forwarded across origins in proxied low-level redirects,High,/uv.lock,,urllib3,2.6.3,2.7.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.2.3,2.8.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-g6x2-hccm-hh4m,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.0.6,3.1.9
+grype,pallets-eco/flask-sqlalchemy,GHSA-g6x2-hccm-hh4m,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.1.8,3.1.9
+grype,pallets-eco/flask-sqlalchemy,GHSA-48p4-8xcf-vxj5,urllib3 does not control redirects in browsers and Node.js,Medium,/uv.lock,,urllib3,2.2.3,2.5.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.2.3,2.8.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-94p9-xgh2-xp45,virtualenv: Downloaded seed wheels (pip/setuptools) are not integrity-checked before use,High,/uv.lock,,virtualenv,21.3.3,21.7.12
+grype,pallets-eco/flask-sqlalchemy,GHSA-p58f-9548-mpm2,virtualenv bash and fish activation scripts execute commands embedded in paths,High,/uv.lock,,virtualenv,21.3.3,21.7.13
+grype,pallets-eco/flask-sqlalchemy,GHSA-68rp-wp8r-4726,Flask session does not add `Vary: Cookie` header when accessed in some ways,Low,/uv.lock,,flask,3.0.3,3.1.3
+grype,pallets-eco/flask-sqlalchemy,GHSA-w853-jp5j-5j7f,filelock has a TOCTOU race condition which allows symlink attacks during lock file creation,Medium,/uv.lock,,filelock,3.16.1,3.20.1
+grype,pallets-eco/flask-sqlalchemy,GHSA-w853-jp5j-5j7f,filelock has a TOCTOU race condition which allows symlink attacks during lock file creation,Medium,/uv.lock,,filelock,3.19.1,3.20.1
+grype,pallets-eco/flask-sqlalchemy,GHSA-x78j-v8h9-3j2q,virtualenv: Command injection via --prompt in activate.bat (batch activator),High,/uv.lock,,virtualenv,21.3.3,21.7.12
+grype,pallets-eco/flask-sqlalchemy,GHSA-5p39-cfhj-2xmp,AnyIO process-pool workers can block indefinitely on undrained stderr,Medium,/uv.lock,,anyio,4.13.0,4.14.2
+grype,pallets-eco/flask-sqlalchemy,GHSA-6w46-j5rx-g56g,pytest has vulnerable tmpdir handling,Medium,/uv.lock,,pytest,8.3.5,9.0.3
+grype,pallets-eco/flask-sqlalchemy,GHSA-6w46-j5rx-g56g,pytest has vulnerable tmpdir handling,Medium,/uv.lock,,pytest,8.4.2,9.0.3
+grype,pallets-eco/flask-sqlalchemy,GHSA-gc5v-m9x4-r6x2,Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function,Medium,/uv.lock,,requests,2.32.4,2.33.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-gc5v-m9x4-r6x2,Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function,Medium,/uv.lock,,requests,2.32.5,2.33.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-9h9j-4vrj-gf7g,"virtualenv writes prompt values into pyvenv.cfg without sanitizing line boundaries, allowing configuration injection",Medium,/uv.lock,,virtualenv,21.3.3,21.7.11
+grype,pallets-eco/flask-sqlalchemy,GHSA-qmgc-5h2g-mvrw,filelock Time-of-Check-Time-of-Use (TOCTOU) Symlink Vulnerability in SoftFileLock,Medium,/uv.lock,,filelock,3.16.1,3.20.3
+grype,pallets-eco/flask-sqlalchemy,GHSA-qmgc-5h2g-mvrw,filelock Time-of-Check-Time-of-Use (TOCTOU) Symlink Vulnerability in SoftFileLock,Medium,/uv.lock,,filelock,3.19.1,3.20.3
+grype,pallets-eco/flask-sqlalchemy,GHSA-5239-wwwm-4pmq,Pygments has Regular Expression Denial of Service (ReDoS) due to Inefficient Regex for GUID Matching,Low,/uv.lock,,pygments,2.19.2,2.20.0
+grype,pallets-eco/flask-sqlalchemy,GHSA-4gg8-gxpx-9rph,uv is vulnerable to arbitrary file write through entry point names,Medium,/uv.lock,,uv,0.11.14,0.11.15
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-86qp-5c8j-p5mr,"Starlette has missing Host header validation that poisons request.url.path, bypassing path-based security checks",Medium,/uv.lock,,starlette,0.52.1,1.0.1
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-mf9v-mfxr-j63j,urllib3: Decompression-bomb safeguards bypassed in parts of the streaming API,High,/uv.lock,,urllib3,2.6.3,2.7.0
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-wqp7-x3pw-xc5r,Starlette: SSRF and NTLM credential theft via UNC paths in StaticFiles on Windows,High,/uv.lock,,starlette,0.52.1,1.1.0
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-2wc2-fm75-p42x,Soup Sieve has Memory Exhaustion via Large Comma-Separated Selector Lists,High,/uv.lock,,soupsieve,2.8.3,2.8.4
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-836r-79rf-4m37,Soup Sieve: Regular Expression Denial of Service (ReDoS) via Selector Parser,High,/uv.lock,,soupsieve,2.8.3,2.8.4
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-82w8-qh3p-5jfq,Starlette: request.form() limits silently ignored for application/x-www-form-urlencoded enable DoS,High,/uv.lock,,starlette,0.52.1,1.3.1
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-j934-xhv5-fg8f,Soup Sieve: Polynomial-time ReDoS (O(n²)) in the whitespace/comment trimming regex `RE_WS_END` (triggers on VALID selectors),Medium,/uv.lock,,soupsieve,2.8.3,2.9.0
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-gjv8-xp57-g29c,Soup Sieve: Polynomial-time ReDoS (O(n²)) in the `IDENTIFIER` / `VALUE` selector sub-patterns,Medium,/uv.lock,,soupsieve,2.8.3,2.9.0
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-29vq-49wr-vm6x,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.1.5,3.1.6
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-82r6-8w77-94w6,AnyIO: TLSStream IDNA 2003 host name encoding enables potential TLS certificate spoofing,Critical,/uv.lock,,anyio,4.12.1,4.14.2
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-65pc-fj4g-8rjx,Internationalized Domain Names in Applications (IDNA): Specially crafted inputs to idna.encode() can bypass CVE-2024-3651 fix,Medium,/uv.lock,,idna,3.11,3.15
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-qccp-gfcp-xxvc,urllib3: Sensitive headers forwarded across origins in proxied low-level redirects,High,/uv.lock,,urllib3,2.6.3,2.7.0
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-g6x2-hccm-hh4m,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.1.5,3.1.9
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-x746-7m8f-x49c,Starlette: Arbitrary HTTP method dispatched to `HTTPEndpoint` attributes via `getattr`,Medium,/uv.lock,,starlette,0.52.1,1.1.0
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.6.3,2.8.0
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-94p9-xgh2-xp45,virtualenv: Downloaded seed wheels (pip/setuptools) are not integrity-checked before use,High,/uv.lock,,virtualenv,20.36.1,21.7.12
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-p58f-9548-mpm2,virtualenv bash and fish activation scripts execute commands embedded in paths,High,/uv.lock,,virtualenv,20.36.1,21.7.13
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-68rp-wp8r-4726,Flask session does not add `Vary: Cookie` header when accessed in some ways,Low,/uv.lock,,flask,3.1.2,3.1.3
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-x78j-v8h9-3j2q,virtualenv: Command injection via --prompt in activate.bat (batch activator),High,/uv.lock,,virtualenv,20.36.1,21.7.12
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-5p39-cfhj-2xmp,AnyIO process-pool workers can block indefinitely on undrained stderr,Medium,/uv.lock,,anyio,4.12.1,4.14.2
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-6w46-j5rx-g56g,pytest has vulnerable tmpdir handling,Medium,/uv.lock,,pytest,9.0.2,9.0.3
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-jp82-jpqv-5vv3,Starlette: Unvalidated request path concatenated into authority poisons request.url.hostname,Low,/uv.lock,,starlette,0.52.1,1.3.0
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-gc5v-m9x4-r6x2,Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function,Medium,/uv.lock,,requests,2.32.5,2.33.0
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-9h9j-4vrj-gf7g,"virtualenv writes prompt values into pyvenv.cfg without sanitizing line boundaries, allowing configuration injection",Medium,/uv.lock,,virtualenv,20.36.1,21.7.11
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-5239-wwwm-4pmq,Pygments has Regular Expression Denial of Service (ReDoS) due to Inefficient Regex for GUID Matching,Low,/uv.lock,,pygments,2.19.2,2.20.0
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-4gg8-gxpx-9rph,uv is vulnerable to arbitrary file write through entry point names,Medium,/uv.lock,,uv,0.9.30,0.11.15
+grype,pallets-eco/flask-sqlalchemy-lite,GHSA-pjjw-68hj-v9mw,uv vulnerable to arbitrary file deletion through RECORD entries,Low,/uv.lock,,uv,0.9.30,0.11.6
+grype,pallets-eco/flask-wtf,GHSA-vxq7-64xx-v4gw,urllib3: HTTPResponse.stream()/read_chunked() buffers an unbounded chunk-size line into memory,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-wtf,GHSA-g6x2-hccm-hh4m,Werkzeug safe_join() allows Windows special device names,Medium,/uv.lock,,werkzeug,3.1.6,3.1.9
+grype,pallets-eco/flask-wtf,GHSA-8988-9cw3-xx77,urllib3: HTTPS proxy TLS configuration may be ignored or overridden,High,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-wtf,GHSA-gh4c-6fx4-qh6g,urllib3: Chunked Deflate streaming can enter an infinite loop,Medium,/uv.lock,,urllib3,2.7.0,2.8.0
+grype,pallets-eco/flask-wtf,GHSA-94p9-xgh2-xp45,virtualenv: Downloaded seed wheels (pip/setuptools) are not integrity-checked before use,High,/uv.lock,,virtualenv,20.36.1,21.7.12
+grype,pallets-eco/flask-wtf,GHSA-p58f-9548-mpm2,virtualenv bash and fish activation scripts execute commands embedded in paths,High,/uv.lock,,virtualenv,20.36.1,21.7.13
+grype,pallets-eco/flask-wtf,GHSA-x78j-v8h9-3j2q,virtualenv: Command injection via --prompt in activate.bat (batch activator),High,/uv.lock,,virtualenv,20.36.1,21.7.12
+grype,pallets-eco/flask-wtf,GHSA-9h9j-4vrj-gf7g,"virtualenv writes prompt values into pyvenv.cfg without sanitizing line boundaries, allowing configuration injection",Medium,/uv.lock,,virtualenv,20.36.1,21.7.11
