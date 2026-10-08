@@ -17,8 +17,9 @@ from . import data, figures as fig, layout as ui
 def _contenido_seccion(seccion: str, datos: dict) -> html.Div:
     """Contenido de cada pestaña (las figuras se construyen al renderizar).
 
-    La pestaña «Repositorios» no entra por aquí: usa el bloque estático
-    `bloque-repos` del layout (sus gráficos tienen sus propios callbacks).
+    Las pestañas «Repositorios» y «Hallazgos» no entran por aquí: usan bloques
+    estáticos del layout (`bloque-repos` y `bloque-hallazgos`) con sus propios
+    callbacks.
     """
     if seccion == "resumen":
         return ui.build_observations(datos)
@@ -69,8 +70,6 @@ def _contenido_seccion(seccion: str, datos: dict) -> html.Div:
             "Ranking de riesgo por repositorio (top 10)",
             fig.fig_riesgo(datos["repo_risk_ranking"], datos["summary"]),
         )
-    if seccion == "hallazgos":
-        return ui.build_placeholder("Hallazgos")  # se implementa en la Tarea 5
     return ui.build_placeholder(ui.SECTIONS.get(seccion, "Resumen"))
 
 
@@ -94,14 +93,21 @@ def register(app: Dash) -> None:
     @app.callback(
         Output("contenido", "children"),
         Output("bloque-repos", "style"),
+        Output("bloque-hallazgos", "style"),
         Input("secciones", "value"),
         Input("refresh", "data"),
     )
     def _actualizar_seccion(seccion, _refresh):
         datos = data.load_all()
         if seccion == "repositorios":
-            return None, ui.REPO_BLOQUE_ESTILO
-        return _contenido_seccion(seccion, datos), ui.REPO_BLOQUE_OCULTO
+            return None, ui.REPO_BLOQUE_ESTILO, ui.HALLAZGOS_BLOQUE_OCULTO
+        if seccion == "hallazgos":
+            return None, ui.REPO_BLOQUE_OCULTO, ui.HALLAZGOS_BLOQUE_ESTILO
+        return (
+            _contenido_seccion(seccion, datos),
+            ui.REPO_BLOQUE_OCULTO,
+            ui.HALLAZGOS_BLOQUE_OCULTO,
+        )
 
     @app.callback(
         Output("grafico-repos", "figure"),
@@ -131,6 +137,74 @@ def register(app: Dash) -> None:
     def _actualizar_relaciones_2(_refresh):
         datos = data.load_all()
         return fig.fig_relaciones(datos["repositories"], datos["summary"], pareja="codeql")
+
+    @app.callback(
+        Output("filtro-repositorio", "options"),
+        Output("filtro-severidad", "options"),
+        Input("refresh", "data"),
+    )
+    def _poblar_filtros_hallazgos(_refresh):
+        """Rellena los dropdowns con los valores presentes en dataset.csv."""
+        hallazgos = data.load_all()["findings"]
+        repos: list[dict] = []
+        severidades: list[dict] = []
+        if not hallazgos.empty:
+            repos = [
+                {"label": str(repo), "value": str(repo)}
+                for repo in sorted(hallazgos["repository"].dropna().unique(), key=str)
+            ]
+            valores_sev = list(hallazgos["severity_level"].dropna().unique())
+            orden = {nombre: i for i, nombre in enumerate(data.GRYPE_SEVERITY_ORDER)}
+            severidades = [
+                {"label": str(sev), "value": str(sev)}
+                for sev in sorted(
+                    valores_sev, key=lambda s: orden.get(str(s), len(orden))
+                )
+            ]
+        return repos, severidades
+
+    @app.callback(
+        Output("tabla-hallazgos", "data"),
+        Output("conteo-hallazgos", "children"),
+        Output("tabla-hallazgos", "page_current"),
+        Input("filtro-fuente", "value"),
+        Input("filtro-repositorio", "value"),
+        Input("filtro-severidad", "value"),
+        Input("busqueda-hallazgos", "value"),
+        Input("refresh", "data"),
+    )
+    def _actualizar_tabla_hallazgos(fuente, repositorio, severidad, busqueda, _refresh):
+        """Filtros combinados con AND + búsqueda insensible a mayúsculas."""
+        hallazgos = data.load_all()["findings"]
+        if hallazgos.empty:
+            return [], "Sin hallazgos para los filtros seleccionados.", 0
+        df = hallazgos.copy()
+        if fuente and fuente != "ambos":
+            df = df[df["source"] == fuente]
+        if repositorio:
+            df = df[df["repository"] == repositorio]
+        if severidad:
+            df = df[df["severity_level"] == severidad]
+        termino = str(busqueda or "").strip()
+        if termino:
+            cadenas = df[["vulnerability_id", "title", "package", "location"]].fillna("")
+            mascara = (
+                cadenas["vulnerability_id"].astype(str).str.contains(termino, case=False, na=False)
+                | cadenas["title"].astype(str).str.contains(termino, case=False, na=False)
+                | cadenas["package"].astype(str).str.contains(termino, case=False, na=False)
+                | cadenas["location"].astype(str).str.contains(termino, case=False, na=False)
+            )
+            df = df[mascara]
+        df = df.reset_index(drop=True)
+        # Dash no serializa NaN: se reemplaza por None antes de to_dict.
+        if "start_line" in df.columns:
+            df["start_line"] = df["start_line"].where(df["start_line"].notna(), None)
+        registros = df.to_dict("records")
+        total = len(registros)
+        if total == 0:
+            return [], "Sin hallazgos para los filtros seleccionados.", 0
+        conteo = "1 hallazgo" if total == 1 else f"{total} hallazgos"
+        return registros, conteo, 0
 
     @app.callback(
         Output("refresh", "data"),

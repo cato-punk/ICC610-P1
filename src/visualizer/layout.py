@@ -9,7 +9,7 @@ Colores coherentes con los usados en el notebook del Analyzer.
 
 from __future__ import annotations
 
-from dash import dcc, html
+from dash import dash_table, dcc, html
 
 # Valor por defecto cuando un dato no está disponible (D7).
 NA = "—"
@@ -115,6 +115,42 @@ _FOOTER = {
 REPO_BLOQUE_ESTILO = {"display": "block"}
 REPO_BLOQUE_OCULTO = {"display": "none"}
 
+# Visibilidad del bloque estático de la pestaña «Hallazgos» (misma técnica).
+HALLAZGOS_BLOQUE_ESTILO = {"display": "block"}
+HALLAZGOS_BLOQUE_OCULTO = {"display": "none"}
+
+_FILTROS_FILA = {
+    "display": "flex",
+    "flexWrap": "wrap",
+    "gap": "16px",
+    "alignItems": "flex-end",
+    "margin": "4px 0 12px",
+}
+_FILTRO_LABEL = {
+    "fontSize": "12px",
+    "textTransform": "uppercase",
+    "letterSpacing": "0.03em",
+    "color": "#64748b",
+    "marginBottom": "4px",
+    "display": "block",
+}
+_TABLA_WRAP = {"marginTop": "8px"}
+
+# Columnas de la tabla exploratoria: `id` = clave del dataset, `name` en español.
+HALLAZGOS_COLUMNAS = [
+    {"name": "Fuente", "id": "source"},
+    {"name": "Repositorio", "id": "repository"},
+    {"name": "Identificador", "id": "vulnerability_id"},
+    {"name": "Título", "id": "title"},
+    {"name": "Severidad", "id": "severity_level"},
+    {"name": "Severidad cruda", "id": "severity"},
+    {"name": "Archivo", "id": "location"},
+    {"name": "Línea", "id": "start_line"},
+    {"name": "Paquete", "id": "package"},
+    {"name": "Versión", "id": "package_version"},
+    {"name": "Versión corregida", "id": "fix_versions"},
+]
+
 
 # --------------------------------------------------------------------------- #
 # Estructura estática (sin datos)                                              #
@@ -219,6 +255,85 @@ def build_layout() -> html.Div:
                     html.H4("Relaciones entre métricas", style=_REPO_TITULO),
                     dcc.Graph(id="grafico-relaciones-1", style={"height": "380px"}),
                     dcc.Graph(id="grafico-relaciones-2", style={"height": "380px"}),
+                ],
+            ),
+            html.Div(
+                id="bloque-hallazgos",
+                style=HALLAZGOS_BLOQUE_OCULTO,
+                children=[
+                    html.Div(
+                        style=_FILTROS_FILA,
+                        children=[
+                            _control_filtro(
+                                "Fuente",
+                                dcc.Dropdown(
+                                    id="filtro-fuente",
+                                    options=[
+                                        {"label": "Ambos", "value": "ambos"},
+                                        {"label": "CodeQL", "value": "codeql"},
+                                        {"label": "Grype", "value": "grype"},
+                                    ],
+                                    value="ambos",
+                                    clearable=False,
+                                    style={"minWidth": "150px"},
+                                ),
+                            ),
+                            _control_filtro(
+                                "Repositorio",
+                                dcc.Dropdown(
+                                    id="filtro-repositorio",
+                                    placeholder="Repositorio (todos)",
+                                    clearable=True,
+                                    style={"minWidth": "260px"},
+                                ),
+                            ),
+                            _control_filtro(
+                                "Severidad",
+                                dcc.Dropdown(
+                                    id="filtro-severidad",
+                                    placeholder="Severidad (todas)",
+                                    clearable=True,
+                                    style={"minWidth": "170px"},
+                                ),
+                            ),
+                            _control_filtro(
+                                "Búsqueda",
+                                dcc.Input(
+                                    id="busqueda-hallazgos",
+                                    type="text",
+                                    placeholder="Buscar por id, título, paquete o archivo…",
+                                    debounce=True,
+                                    style={"minWidth": "260px", "padding": "6px 10px"},
+                                ),
+                            ),
+                        ],
+                    ),
+                    html.Div(id="conteo-hallazgos", style=_MUTED),
+                    html.Div(
+                        style=_TABLA_WRAP,
+                        children=[
+                            dash_table.DataTable(
+                                id="tabla-hallazgos",
+                                columns=HALLAZGOS_COLUMNAS,
+                                page_size=15,
+                                sort_action="native",
+                                filter_action="none",
+                                style_header={
+                                    "fontWeight": "600",
+                                    "backgroundColor": "#f1f5f9",
+                                    "color": "#0f172a",
+                                },
+                                style_cell={
+                                    "textAlign": "left",
+                                    "padding": "6px 8px",
+                                    "whiteSpace": "normal",
+                                    "maxWidth": "340px",
+                                },
+                                style_table={"overflowX": "auto"},
+                                page_current=0,
+                            ),
+                        ],
+                    ),
                 ],
             ),
             html.Footer(
@@ -369,3 +484,13 @@ def build_seccion(titulo: str, figure, caption: str = "") -> html.Div:
     if caption:
         hijos.append(build_caption(caption))
     return html.Div(hijos, style=_CARD_BOX)
+
+
+def _control_filtro(etiqueta: str, componente) -> html.Div:
+    """Filtro de la pestaña Hallazgos: etiqueta arriba y control debajo."""
+    return html.Div(
+        [
+            html.Label(etiqueta, style=_FILTRO_LABEL),
+            componente,
+        ]
+    )
