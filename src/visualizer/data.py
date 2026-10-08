@@ -1,20 +1,4 @@
-"""Carga y normalización de los datos de `data/processed/` para el Visualizer.
-
-Reglas de diseño (ver `planificacion.md`, decisiones D1, D2 y D7):
-
-- **Solo lectura**: este módulo nunca escribe, mueve ni borra archivos.
-- **Sin imports de otros componentes**: la comunicación con Miner y Analyzer es
-  exclusivamente por archivos; aquí NO se importa `miner` ni `analyzer`.
-- **Espejo de `analyzer/utils/data_loader.py`**: `severity_level` y
-  `path_category` se calculan aquí con el mismo criterio que usa el notebook.
-  Si cambia ese archivo, revisar también este (los puntos en pareja están
-  marcados con «espejo»).
-- **Nunca propaga excepciones por archivos ausentes o corruptos**: se registran
-  en la lista `missing` y se devuelven DataFrames vacíos con las columnas
-  esperadas, para que la interfaz pueda mostrar un aviso en español.
-- **Sin caché**: `load_all()` relee el disco en cada llamada, de modo que un
-  refresco del navegador refleja datos nuevos sin reiniciar el servidor.
-"""
+"""Carga y normalización de los datos de `data/processed/` para el Visualizer."""
 
 from __future__ import annotations
 
@@ -28,8 +12,6 @@ import pandas as pd
 GRYPE_SEVERITY_ORDER = ["Critical", "High", "Medium", "Low", "Negligible", "Unknown"]
 
 # Espejo de analyzer.utils.data_loader.CODEQL_LEVEL_MAP.
-# Equivalencia CONVENCIONAL (nivel SARIF -> severidad comparable): sirve para
-# ordenar, NO son escalas equivalentes. La interfaz debe mantener esta advertencia.
 CODEQL_LEVEL_MAP = {"error": "High", "warning": "Medium", "note": "Low", "recommendation": "Low"}
 
 # Espejo de miner.dataset_builder.COLUMNS (una fila por hallazgo).
@@ -68,9 +50,6 @@ REPOSITORY_COLUMNS = [
 REPOSITORIES_TEXT_COLUMNS = {"repository", "url", "status", "languages", "grype_status"}
 
 # Exportaciones del Analyzer en data/processed/analysis/:
-# nombre de archivo -> (columnas mínimas requeridas, columnas de texto).
-# Si falta una columna requerida, el archivo se considera ilegible y se
-# registra en `missing` (no se intenta adivinar su estructura).
 ANALYSIS_CSVS: dict[str, tuple[list[str], set[str]]] = {
     "severity_overview": (["source"], {"source"}),
     "codeql_rules": (["vulnerability_id", "findings", "repos"], {"vulnerability_id"}),
@@ -193,12 +172,7 @@ def _coerce_numeric(df: pd.DataFrame, text_columns: set[str]) -> pd.DataFrame:
 
 
 def normalize_findings(df: pd.DataFrame) -> pd.DataFrame:
-    """Deriva las columnas que necesita la interfaz a partir de `dataset.csv`.
-
-    Espejo de analyzer.utils.data_loader.load_dataset: `start_line` numérico,
-    `fixable` (hay versión corregida), `severity_level` (equivalencia
-    convencional SARIF->severidad para CodeQL) y `path_category`.
-    """
+    """Deriva las columnas que necesita la interfaz a partir de `dataset.csv`"""
     df = df.copy()
     if "start_line" in df.columns:
         df["start_line"] = pd.to_numeric(df["start_line"], errors="coerce")
@@ -219,10 +193,7 @@ def normalize_findings(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def derive_org(repositories: pd.DataFrame) -> str:
-    """Organización más frecuente (prefijo antes de la primera `/`) de los repos.
-
-    Se deriva de los datos para no hardcodear el nombre de la organización (D6).
-    """
+    """Organización más frecuente (prefijo antes de la primera `/`) de los repos."""
     if repositories.empty or "repository" not in repositories.columns:
         return ""
     prefixes = Counter(
@@ -232,19 +203,7 @@ def derive_org(repositories: pd.DataFrame) -> str:
 
 
 def load_all() -> dict[str, object]:
-    """Lee todo `data/processed/` y devuelve el paquete de datos de la UI.
-
-    Devuelve:
-      - "summary": dict            ← analysis/summary.json
-      - 6 DataFrames                ← analysis/*.csv (nombre = clave)
-      - "repositories": DataFrame   ← repositories.csv (+ short_name)
-      - "findings": DataFrame       ← dataset.csv (+ columnas derivadas)
-      - "missing": list[str]        ← archivos ausentes/ilegibles (para avisos)
-      - "org": str                  ← organización derivada de repositories.csv
-
-    Nunca lanza excepciones por archivos ausentes o corruptos; cada llamada
-    relee el disco (sin caché) para que un refresco muestre datos nuevos.
-    """
+    """Lee todo `data/processed/` y devuelve el paquete de datos de la UI."""
     processed = processed_dir()
     analysis = processed / "analysis"
     missing: list[str] = []

@@ -30,7 +30,7 @@ datos del Miner ni del Analyzer, solo analiza este repositorio.
 ├── src/
 │   ├── miner/        # CLI, clonado, runners de CodeQL/Syft/Grype, dataset_builder
 │   ├── analyzer/     # notebooks/ y utils/
-│   ├── visualizer/   # app/
+│   ├── visualizer/   # app Dash (data, figures, layout, callbacks, main)
 │   └── reporter/     # inspector, cliente LLM y generador de Markdown
 ├── tests/
 ├── .env.example
@@ -107,6 +107,21 @@ jupyter nbconvert --to notebook --execute --inplace \
 ```
 
 Las tablas resultantes quedan en `data/processed/analysis/`.
+
+
+### Visualizer
+
+```bash
+# (ya instalado en el Dev Container)
+visualizer            # o: python -m visualizer.main
+# → http://127.0.0.1:8050/
+```
+
+Muestra KPIs, observaciones y las secciones de gráficos (Severidad, Repositorios
+con métrica/Top-N y relaciones, CodeQL, Dependencias, Riesgo) además de una tabla
+exploratoria de hallazgos con filtros. Lee `data/processed/` automáticamente en
+cada render: tras re-ejecutar el Miner y el notebook del Analyzer, basta recargar
+la página o pulsar «Actualizar datos». Orden de uso: `Miner → Analyzer → Visualizer`.
 
 
 ### Reporter

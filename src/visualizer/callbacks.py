@@ -1,9 +1,4 @@
-"""Callbacks de la app Dash.
-
-Todos los callbacks que muestran datos llaman a `data.load_all()` en cada
-ejecución (decisión D2: sin caché), de modo que un refresco del navegador o el
-botón «Actualizar datos» releen `data/processed/` sin reiniciar el servidor.
-"""
+"""Callbacks de la app Dash."""
 
 from __future__ import annotations
 
@@ -15,12 +10,7 @@ from . import data, figures as fig, layout as ui
 
 
 def _contenido_seccion(seccion: str, datos: dict) -> html.Div:
-    """Contenido de cada pestaña (las figuras se construyen al renderizar).
-
-    Las pestañas «Repositorios» y «Hallazgos» no entran por aquí: usan bloques
-    estáticos del layout (`bloque-repos` y `bloque-hallazgos`) con sus propios
-    callbacks.
-    """
+    """Contenido de cada pestaña (las figuras se construyen al renderizar)."""
     if seccion == "resumen":
         return ui.build_observations(datos)
     if seccion == "severidad":
@@ -87,7 +77,6 @@ def register(app: Dash) -> None:
 
     @app.callback(Output("avisos-datos", "children"), Input("refresh", "data"))
     def _actualizar_avisos(_refresh):
-        # D7: si falta algún archivo, se muestra un aviso en español; si no, vacío.
         return ui.build_alerts(list(data.load_all()["missing"]))
 
     @app.callback(

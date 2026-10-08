@@ -1,11 +1,4 @@
-"""Layout de la app Dash (componentes visuales en español).
-
-Este módulo es **puro**: solo construye componentes de Dash a partir de los
-datos que recibe; no lee archivos ni tiene estado. La carga de datos vive en
-`data.py` y el cableado en `callbacks.py`.
-
-Colores coherentes con los usados en el notebook del Analyzer.
-"""
+"""Layout de la app Dash (componentes visuales en español)."""
 
 from __future__ import annotations
 
@@ -25,9 +18,7 @@ SECTIONS: dict[str, str] = {
     "hallazgos": "Hallazgos",
 }
 
-# --------------------------------------------------------------------------- #
-# Estilos (locales: la demo no carga CSS ni scripts externos)                  #
-# --------------------------------------------------------------------------- #
+
 _PAGE = {
     "maxWidth": "1200px",
     "margin": "0 auto",
@@ -109,13 +100,10 @@ _FOOTER = {
     "lineHeight": "1.5",
 }
 
-# Visibilidad del bloque estático de la pestaña «Repositorios» (lo conmuta el
-# callback de sección; los gráficos e ids existen siempre en el DOM para que
-# Dash valide los callbacks sin `suppress_callback_exceptions`).
+
 REPO_BLOQUE_ESTILO = {"display": "block"}
 REPO_BLOQUE_OCULTO = {"display": "none"}
 
-# Visibilidad del bloque estático de la pestaña «Hallazgos» (misma técnica).
 HALLAZGOS_BLOQUE_ESTILO = {"display": "block"}
 HALLAZGOS_BLOQUE_OCULTO = {"display": "none"}
 
@@ -136,7 +124,6 @@ _FILTRO_LABEL = {
 }
 _TABLA_WRAP = {"marginTop": "8px"}
 
-# Columnas de la tabla exploratoria: `id` = clave del dataset, `name` en español.
 HALLAZGOS_COLUMNAS = [
     {"name": "Fuente", "id": "source"},
     {"name": "Repositorio", "id": "repository"},
@@ -152,15 +139,9 @@ HALLAZGOS_COLUMNAS = [
 ]
 
 
-# --------------------------------------------------------------------------- #
-# Estructura estática (sin datos)                                              #
-# --------------------------------------------------------------------------- #
-def build_layout() -> html.Div:
-    """Layout base: encabezado, contenedores de datos, pestañas y pie.
 
-    Los contenedores con id (`subtitulo`, `kpis`, `avisos-datos`, `contenido`)
-    se rellenan desde `callbacks.py` leyendo `data/processed/` en cada render.
-    """
+def build_layout() -> html.Div:
+    """Layout base: encabezado, contenedores de datos, pestañas y pie."""
     return html.Div(
         style=_PAGE,
         children=[
@@ -358,11 +339,8 @@ def build_layout() -> html.Div:
     )
 
 
-# --------------------------------------------------------------------------- #
-# Constructores de contenido (reciben el paquete de data.load_all())           #
-# --------------------------------------------------------------------------- #
+
 def build_subtitle(datos: dict) -> str:
-    """Subtítulo con la organización derivada (D6) y la cobertura de análisis."""
     summary = datos.get("summary") or {}
     coverage = summary.get("coverage") or {}
     partes: list[str] = []
@@ -391,14 +369,12 @@ def _card(titulo: str, valor: object, detalle: str = "") -> html.Div:
 
 
 def _pct(valor: object) -> object:
-    """Formato de porcentaje en español; `None`/ausente -> «—»."""
     if isinstance(valor, (int, float)):
         return f"{valor * 100:.0f} %"
     return NA
 
 
 def build_kpis(datos: dict) -> list[html.Div]:
-    """Fila de tarjetas KPI derivadas de summary.json (sin valores hardcodeados)."""
     summary = datos.get("summary") or {}
     coverage = summary.get("coverage") or {}
     conc_codeql = (summary.get("concentration") or {}).get("CodeQL") or {}
@@ -414,7 +390,6 @@ def build_kpis(datos: dict) -> list[html.Div]:
 
 
 def build_observations(datos: dict) -> html.Div:
-    """Contenido de la pestaña «Resumen»: observaciones generadas por el Analyzer."""
     summary = datos.get("summary") or {}
     observaciones = summary.get("observations") or []
     hijos: list = [
@@ -440,7 +415,6 @@ def build_observations(datos: dict) -> html.Div:
 
 
 def build_placeholder(etiqueta: str) -> html.Div:
-    """Contenido de las pestañas aún no implementadas (Tarea 4/5)."""
     return html.Div(
         [html.H3(etiqueta), html.P("Sección en construcción.", style=_MUTED)],
         style=_CARD_BOX,
@@ -448,7 +422,6 @@ def build_placeholder(etiqueta: str) -> html.Div:
 
 
 def build_alerts(missing: list[str]) -> html.Div:
-    """Avisos en español cuando faltan archivos de `data/processed/` (D7)."""
     if not missing:
         return html.Div()
     items = [html.Li(f"Falta {nombre}") for nombre in missing]
@@ -474,12 +447,10 @@ def build_alerts(missing: list[str]) -> html.Div:
 
 
 def build_caption(texto: str) -> html.P:
-    """Párrafo de apoyo bajo una figura (texto plano, sin renderizar HTML)."""
     return html.P(texto, style=_MUTED)
 
 
 def build_seccion(titulo: str, figure, caption: str = "") -> html.Div:
-    """Sección de contenido: encabezado, figura Plotly y nota opcional."""
     hijos: list = [html.H3(titulo), dcc.Graph(figure=figure)]
     if caption:
         hijos.append(build_caption(caption))
@@ -487,7 +458,6 @@ def build_seccion(titulo: str, figure, caption: str = "") -> html.Div:
 
 
 def _control_filtro(etiqueta: str, componente) -> html.Div:
-    """Filtro de la pestaña Hallazgos: etiqueta arriba y control debajo."""
     return html.Div(
         [
             html.Label(etiqueta, style=_FILTRO_LABEL),

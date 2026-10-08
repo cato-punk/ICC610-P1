@@ -17,7 +17,7 @@ def build_app() -> Dash:
 
 
 def main() -> None:
-    """Arranca el servidor en 127.0.0.1:8050 sin debugger (decisión D3)."""
+    """Arranca el servidor en 127.0.0.1:8050"""
     build_app().run(host="127.0.0.1", port=8050, debug=False)
 
 

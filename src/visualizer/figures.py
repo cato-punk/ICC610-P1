@@ -1,19 +1,4 @@
-"""Constructores de figuras Plotly para el Visualizer.
-
-Funciones **puras**: reciben los DataFrames de `data.load_all()` (y el dict de
-`summary.json`) y devuelven `go.Figure`. No leen archivos ni guardan estado.
-Si un archivo falta o una columna esperada no existe, se devuelve una figura
-«Sin datos» (D7) en lugar de fallar.
-
-Reglas de presentación (ver `planificacion.md`, Tarea 4):
-- Todos los textos visibles en español; ningún número escrito literalmente en
-  el código (RV5/RV6 y D6): todo sale de los DataFrames y de summary.json.
-- Colores consistentes con el notebook del Analyzer: rojo `#dc2626` para
-  Grype/dependencias, azul `#2563eb` para CodeQL/código, y la paleta de
-  severidades Critical->Unknown acordada.
-- Textos de repositorios/reglas entran solo a `hovertemplate`/`text` de Plotly
-  (Plotly escapa su render); nunca se construye HTML con esos datos.
-"""
+"""Constructores de figuras Plotly para el Visualizer."""
 
 from __future__ import annotations
 
@@ -50,9 +35,7 @@ METRICA_COLOR = {
 }
 
 
-# --------------------------------------------------------------------------- #
-# Formateo localizado (español)                                               #
-# --------------------------------------------------------------------------- #
+
 def _int(valor) -> str:
     """Entero con separador de miles (punto). `None`/no numérico -> «—»."""
     try:
@@ -85,9 +68,6 @@ def _num_local(valor, decimals: int = 2) -> str:
         return NA
 
 
-# --------------------------------------------------------------------------- #
-# Base de las figuras                                                         #
-# --------------------------------------------------------------------------- #
 def _config(
     fig: go.Figure,
     titulo: str,
@@ -111,7 +91,6 @@ def _config(
 
 
 def _fig_vacia(titulo: str, fuente: str) -> go.Figure:
-    """Figura degradada (D7): se usa cuando falta el archivo o sus columnas."""
     fig = go.Figure()
     fig.add_annotation(
         text=f"Sin datos para esta vista (falta {fuente}).",
@@ -125,11 +104,7 @@ def _fig_vacia(titulo: str, fuente: str) -> go.Figure:
     return _config(fig, titulo)
 
 
-# --------------------------------------------------------------------------- #
-# Textos de apoyo derivados de summary.json (no van literales en el código)   #
-# --------------------------------------------------------------------------- #
 def texto_codeql_source(summary: dict | None) -> str:
-    """«Solo el 56,5 % está en código fuente…» con formato localizado."""
     summary = summary or {}
     share = summary.get("codeql_source_share")
     if share is None:
@@ -141,7 +116,6 @@ def texto_codeql_source(summary: dict | None) -> str:
 
 
 def texto_concentracion(summary: dict | None, metrica: str) -> str:
-    """Anotación de concentración (top3_share/gini) para la métrica activa."""
     summary = summary or {}
     clave = {"codeql_findings": "CodeQL", "grype_vulnerabilities": "Grype"}.get(metrica)
     if not clave:
@@ -156,9 +130,6 @@ def texto_concentracion(summary: dict | None, metrica: str) -> str:
     )
 
 
-# --------------------------------------------------------------------------- #
-# 1. Severidad (codeql/grype)                                                 #
-# --------------------------------------------------------------------------- #
 def fig_severidad_overview(df: pd.DataFrame) -> go.Figure:
     """Barras horizontales apiladas source (codeql/grype) × severidad."""
     titulo = "Severidad comparada por herramienta"
@@ -189,9 +160,7 @@ def fig_severidad_overview(df: pd.DataFrame) -> go.Figure:
     return _config(fig, titulo, x_titulo="Hallazgos y coincidencias")
 
 
-# --------------------------------------------------------------------------- #
-# 2. Repositorios (métrica + Top-N) y 3. Relaciones                           #
-# --------------------------------------------------------------------------- #
+
 def fig_repositorios(
     repositories: pd.DataFrame,
     risk_ranking: pd.DataFrame,
@@ -292,9 +261,6 @@ def fig_relaciones(
     )
 
 
-# --------------------------------------------------------------------------- #
-# 4. CodeQL — reglas                                                          #
-# --------------------------------------------------------------------------- #
 def fig_codeql_reglas(df: pd.DataFrame) -> go.Figure:
     """Barras horizontales de las 10 reglas con más hallazgos y «N repos»."""
     titulo = "Reglas de CodeQL más frecuentes (top 10)"
@@ -318,9 +284,7 @@ def fig_codeql_reglas(df: pd.DataFrame) -> go.Figure:
     return _config(fig, titulo, x_titulo="Hallazgos")
 
 
-# --------------------------------------------------------------------------- #
-# 5. CodeQL — categoría de ruta                                               #
-# --------------------------------------------------------------------------- #
+
 def fig_codeql_categorias(df: pd.DataFrame) -> go.Figure:
     """Barras apiladas path_category (source/tests/docs/examples) × severidad."""
     titulo = "Hallazgos de CodeQL por categoría de ruta"
@@ -353,9 +317,6 @@ def fig_codeql_categorias(df: pd.DataFrame) -> go.Figure:
     return _config(fig, titulo, x_titulo="Hallazgos")
 
 
-# --------------------------------------------------------------------------- #
-# 6. Dependencias — severidad Grype                                           #
-# --------------------------------------------------------------------------- #
 def fig_grype_severidad(df: pd.DataFrame, summary: dict | None) -> go.Figure:
     """Barras `matches` por severidad; etiqueta con `distinct_cves` + fixable."""
     summary = summary or {}
@@ -396,9 +357,7 @@ def fig_grype_severidad(df: pd.DataFrame, summary: dict | None) -> go.Figure:
     return _config(fig, titulo, x_titulo="Coincidencias (paquete × CVE)")
 
 
-# --------------------------------------------------------------------------- #
-# 7. Dependencias — paquetes sistémicos                                        #
-# --------------------------------------------------------------------------- #
+
 def fig_grype_top_packages(df: pd.DataFrame, summary: dict | None) -> go.Figure:
     """Top 15 por `repos`; color por `worst`; hover con matches/CVE/fixable."""
     summary = summary or {}
@@ -463,9 +422,6 @@ def fig_grype_top_packages(df: pd.DataFrame, summary: dict | None) -> go.Figure:
     return _config(fig, titulo, x_titulo="Repositorios en los que aparece la versión")
 
 
-# --------------------------------------------------------------------------- #
-# 8. Riesgo                                                                   #
-# --------------------------------------------------------------------------- #
 def fig_riesgo(df: pd.DataFrame, summary: dict | None) -> go.Figure:
     """Top 10 por score_total: score_deps + score_code; texto con risk_top3."""
     summary = summary or {}
