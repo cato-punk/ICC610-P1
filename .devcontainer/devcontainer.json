@@ -8,7 +8,8 @@
     "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
     "LLM_API_KEY": "${localEnv:LLM_API_KEY}"
   },
-  "postCreateCommand": "pip install -e '.[dev,analysis]'",
+  "forwardPorts": [8050],
+  "postCreateCommand": "pip install -e '.[dev,analysis,visualizer]'",
   "customizations": {
     "vscode": {
       "extensions": ["ms-python.python", "ms-toolsai.jupyter", "github.vscode-codeql"]

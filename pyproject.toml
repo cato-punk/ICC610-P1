@@ -30,13 +30,18 @@ analysis = [
     "ipykernel",
     "numpy",
 ]
+visualizer = [
+    "dash>=3.0",
+    "pandas>=2.0",
+]
 
 [project.scripts]
 miner = "miner.cli:app"
+visualizer = "visualizer.main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["miner*", "analyzer*", "reporter*"]
+include = ["miner*", "analyzer*", "reporter*", "visualizer*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
