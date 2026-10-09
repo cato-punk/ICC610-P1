@@ -1,0 +1,5 @@
+severity_level,matches,distinct_cves,fixable_share
+Critical,6.0,1.0,100.0
+High,138.0,31.0,100.0
+Medium,155.0,34.0,100.0
+Low,25.0,7.0,100.0

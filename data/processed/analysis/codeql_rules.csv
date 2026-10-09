@@ -1,0 +1,10 @@
+vulnerability_id,findings,repos
+py/url-redirection,27,4
+py/flask-debug,24,3
+py/weak-sensitive-data-hashing,3,2
+py/path-injection,3,1
+py/log-injection,1,1
+py/overly-permissive-file,1,1
+py/redos,1,1
+py/reflective-xss,1,1
+py/stack-trace-exposure,1,1

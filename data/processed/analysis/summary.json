@@ -1,0 +1,47 @@
+{
+  "coverage": {
+    "repositories": 30,
+    "codeql_analyzed": 30,
+    "grype_scanned": 30
+  },
+  "codeql_source_share": 0.565,
+  "concentration": {
+    "CodeQL": {
+      "total": 62,
+      "top3_share": 0.823,
+      "gini": 0.887,
+      "repos_with_zero": 19
+    },
+    "Grype": {
+      "total": 324,
+      "top3_share": 0.469,
+      "gini": 0.754,
+      "repos_with_zero": 17
+    }
+  },
+  "grype": {
+    "matches": 324,
+    "distinct_cves": 73,
+    "fixable_share": 1.0
+  },
+  "systemic_packages": 16,
+  "spearman": {
+    "components_vs_grype": 0.73,
+    "codeql_vs_grype": -0.42,
+    "score_deps_vs_score_code": -0.33
+  },
+  "risk_top3": [
+    "pallets-eco/flask-orjson",
+    "pallets-eco/flask-sqlalchemy",
+    "pallets-eco/flask-principal"
+  ],
+  "observations": [
+    "Se analizaron 30 de 30 repositorios con CodeQL y 30 con Grype.",
+    "Los 3 repositorios con más vulnerabilidades en dependencias concentran 47% del total (Gini=0.754).",
+    "Los 3 repositorios con más hallazgos de CodeQL concentran 82% del total; 19 repositorios no tienen ninguno.",
+    "Solo 56% de los hallazgos de CodeQL están en código fuente; el resto está en tests, docs o ejemplos.",
+    "Grype reporta 324 coincidencias que corresponden a 73 CVE distintas; 100% tiene versión corregida disponible.",
+    "16 versiones de paquetes vulnerables se repiten en 3 o más repositorios.",
+    "Repositorios con mayor puntaje de riesgo: pallets-eco/flask-orjson, pallets-eco/flask-sqlalchemy, pallets-eco/flask-principal."
+  ]
+}

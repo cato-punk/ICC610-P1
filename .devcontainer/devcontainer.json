@@ -1,0 +1,18 @@
+{
+  "name": "ICC610-P1",
+  "build": { "dockerfile": "Dockerfile" },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" }
+  },
+  "containerEnv": {
+    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
+    "LLM_API_KEY": "${localEnv:LLM_API_KEY}"
+  },
+  "forwardPorts": [8050],
+  "postCreateCommand": "pip install -e '.[dev,analysis,visualizer]'",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "ms-toolsai.jupyter", "github.vscode-codeql"]
+    }
+  }
+}
