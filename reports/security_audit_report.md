@@ -1,12 +1,12 @@
 # Auditoría de seguridad del repositorio
 
-> Generado por el Reporter (inspector `0.1.0`) el 2026-10-09T03:01:52.162274+00:00.
-> Raíz analizada: `/workspaces/ICC610-P1` · Archivos inspeccionados: 53 · Aspectos: secret-handling, command-injection, network-requests, supply-chain, file-permissions, github-token-scope, sandbox-escape, output-injection, workflow-security.
-> Modelo utilizado: `openai/gpt-4o-mini`.
+> Generado por el Reporter (inspector `0.1.0`) el 2026-10-09T13:15:16.495891+00:00.
+> Raíz analizada: `/home/runner/work/ICC610-P1/ICC610-P1` · Archivos inspeccionados: 52 · Aspectos: secret-handling, command-injection, network-requests, supply-chain.
+> ⚠️ **Reporte determinista (fallback):** el LLM no se utilizó (Define LLM_API_KEY en el entorno (ver .env.example).). El contenido no depende del modelo.
 
 ## Resumen ejecutivo
 
-Se ha identificado un hallazgo relacionado con la gestión de imágenes en el contexto de la cadena de suministro de software. En el archivo Dockerfile, se utiliza una imagen base que no está fijada por digest, lo que puede llevar a inconsistencias en las builds debido a que una etiqueta de imagen puede ser reescrita. Esto representa un riesgo medio para la seguridad y estabilidad del entorno de desarrollo.
+Se identificaron 1 hallazgos respaldados por evidencia (medium: 1). Cada uno referencia archivo y línea; los detalles y las recomendaciones aparecen a continuación.
 
 ## Alcance y método
 
@@ -40,7 +40,7 @@ FROM mcr.microsoft.com/devcontainers/python:1-3.12-bookworm
 
 </details>
 
-**Recomendación:** Modificar el Dockerfile para utilizar un digest específico de la imagen base en lugar de una etiqueta, asegurando así que la misma versión de la imagen se utilice en cada build.
+**Recomendación:** Fijar la imagen base por digest (@sha256:...).
 
 ## Limitaciones
 
