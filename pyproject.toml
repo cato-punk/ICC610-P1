@@ -38,6 +38,7 @@ visualizer = [
 [project.scripts]
 miner = "miner.cli:app"
 visualizer = "visualizer.main:main"
+reporter = "reporter.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

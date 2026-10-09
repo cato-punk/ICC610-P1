@@ -39,6 +39,11 @@ nodegoat.json
 *.log
 *.rar
 
+# Reporter (estado de rotación de aspectos)
+.reporter_state.json
+.coverage
+htmlcov/
+
 # IDE
 .idea/
 .vscode/

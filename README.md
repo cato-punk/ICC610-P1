@@ -66,13 +66,37 @@ pip install -e ".[dev]"
 
 ## Configuración
 
-Los secretos nunca se guardan en el repositorio. Copia `.env.example` a `.env`
-(ignorado por Git) o usa variables de entorno:
+Los secretos nunca se guardan en el repositorio: se leen de variables de entorno
+o de un archivo `.env` (ignorado por Git). Copia la plantilla:
 
+```bash
+cp .env.example .env
 ```
-GITHUB_TOKEN=
-LLM_API_KEY=
-```
+
+Variables reconocidas (las variables exportadas tienen prioridad sobre `.env`):
+
+| Variable | Componente | Obligatoria | Default | Descripción |
+|---|---|---|---|---|
+| `GITHUB_TOKEN` | Miner | Sí (Miner) | — | Token de GitHub; eleva el límite de la API. El Reporter no lo usa. |
+| `LLM_API_KEY` | Reporter | No | — | Clave del proveedor LLM. Sin ella, el Reporter usa modo determinista. |
+| `LLM_BASE_URL` | Reporter | No | `https://api.openai.com/v1` | Endpoint compatible con la API de OpenAI. |
+| `LLM_MODEL` | Reporter | No | `gpt-4o-mini` | Modelo a usar (`--model` lo sobreescribe). |
+| `LLM_TIMEOUT` | Reporter | No | `60` | Timeout en segundos por llamada al LLM. |
+
+### GitHub Actions
+
+El workflow `.github/workflows/daily-action-setup-security-audit.yml` ejecuta el
+Reporter a diario. Configura en **Settings → Secrets and variables → Actions**:
+
+| Nombre | Pestaña | Uso | Obligatorio |
+|---|---|---|---|
+| `LLM_API_KEY` | Secrets | Clave del LLM | No (sin ella → reporte determinista) |
+| `LLM_BASE_URL` | Variables | Endpoint del LLM | No (default OpenAI) |
+| `LLM_MODEL` | Variables | Modelo | No (default `gpt-4o-mini`) |
+| `LLM_TIMEOUT` | Variables | Timeout en segundos | No (default `60`) |
+
+El `GITHUB_TOKEN` del paso de commit es automático de GitHub: no se configura y
+requiere `permissions: contents: write` (ya declarado en el workflow).
 
 ## Uso
 
@@ -126,11 +150,33 @@ la página o pulsar «Actualizar datos». Orden de uso: `Miner → Analyzer → 
 
 ### Reporter
 
+Audita la seguridad de *este* repositorio: secretos versionados, inyección de
+comandos, peticiones de red, cadena de suministro, permisos de archivos, alcance
+del `GITHUB_TOKEN`, escape de sandbox, inyección en workflows y seguridad de
+workflows. El inspector es determinista y cita `archivo:línea`; el LLM solo
+enriquece el resumen y las recomendaciones de hallazgos ya detectados.
+
 ```bash
-python -m reporter.cli     # genera reports/security_audit_report.md
+# Reporte determinista, sin LLM
+python -m reporter.cli --no-llm
+
+# Con LLM (requiere LLM_API_KEY; ver .env.example)
+python -m reporter.cli
+
+# Sale con código 1 si hay hallazgos high/critical; 2 con --strict-llm sin LLM
+python -m reporter.cli --fail-on high
 ```
 
-*(En desarrollo.)*
+El reporte se escribe en `reports/security_audit_report.md`. El workflow
+`.github/workflows/daily-action-setup-security-audit.yml` lo ejecuta a diario,
+rota los aspectos revisados (60/40) y publica el resultado como artifact y commit.
+
+Opciones: `--repo-root`, `--output`, `--no-llm`, `--strict-llm`, `--model`,
+`--fail-on {never|critical|high}`, `--rotate-aspects`, `--state-file`, `--quiet`.
+
+Configuración de variables en `.env` y de Secrets/Variables en Actions: ver
+[Configuración](#configuración). El Reporter solo usa `LLM_API_KEY`,
+`LLM_BASE_URL`, `LLM_MODEL` y `LLM_TIMEOUT`.
 
 ## Pruebas
 
