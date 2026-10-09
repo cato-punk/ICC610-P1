@@ -1,0 +1,3 @@
+source,Critical,High,Medium,Low,Negligible,Unknown
+codeql,0,0,62,0,0,0
+grype,6,138,155,25,0,0
