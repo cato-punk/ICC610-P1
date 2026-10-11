@@ -1,7 +1,7 @@
 # Auditoría de seguridad del repositorio
 
-> Generado por el Reporter (inspector `0.1.0`) el 2026-10-10T12:29:56.274477+00:00.
-> Raíz analizada: `/home/runner/work/ICC610-P1/ICC610-P1` · Archivos inspeccionados: 53 · Aspectos: secret-handling, command-injection, file-permissions, github-token-scope.
+> Generado por el Reporter (inspector `0.1.0`) el 2026-10-11T12:47:47.963379+00:00.
+> Raíz analizada: `/home/runner/work/ICC610-P1/ICC610-P1` · Archivos inspeccionados: 53 · Aspectos: secret-handling, command-injection, sandbox-escape, output-injection.
 > ⚠️ **Reporte determinista (fallback):** el LLM no se utilizó (Define LLM_API_KEY en el entorno (ver .env.example).). El contenido no depende del modelo.
 
 ## Resumen ejecutivo
